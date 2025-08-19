@@ -1,17 +1,25 @@
 ﻿using Krosoft.Extensions.Jobs.Extensions;
 using Krosoft.Extensions.Jobs.Interfaces;
 using Krosoft.Extensions.Testing;
+using Krosoft.Extensions.Testing.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Krosoft.Extensions.Jobs.Services.Tests
 {
     [TestClass]
     public class FireForgetServiceTests : BaseTest
     {
+        private Mock<ILogger<FireForgetService>> _mockLogger = null!;
+
         protected override void AddServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddFireForget();
+
+            _mockLogger = new Mock<ILogger<FireForgetService>>();
+            services.SwapTransient(_ => _mockLogger.Object)
+         
+                 .AddFireForget();
         }
 
         [TestMethod]
@@ -31,10 +39,9 @@ namespace Krosoft.Extensions.Jobs.Services.Tests
         [TestMethod]
         public void FireAsyncTest()
         {
-            var services = new ServiceCollection();
-            services.AddFireForget();
-            var buildServiceProvider = services.BuildServiceProvider();
-            var service = buildServiceProvider.GetRequiredService<IFireForgetService>();
+            using var serviceProvider = CreateServiceCollection();
+
+            var service = serviceProvider.GetRequiredService<IFireForgetService>();
             service.FireAsync<INotificationService>(null!);
 
             //Check.That(delta).IsLessThan(threshold);
