@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs\Krosoft.Extensions.Jobs.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Krosoft.Extensions.Testing" Version="2025.5.13.1513" />
+	 	</ItemGroup>
+</Project>
