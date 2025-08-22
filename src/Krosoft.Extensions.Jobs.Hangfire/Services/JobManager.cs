@@ -69,9 +69,20 @@ public class JobManager : IJobManager
             var recurringJob = _recurringjobs.FirstOrDefault(x => x.Type == jobSetting.Type);
             if (recurringJob != null)
             {
+#if NET9_0_OR_GREATER
+                _recurringJobManager.AddOrUpdate(jobSetting.Identifiant,
+                                                 jobSetting.QueueName,
+                                                 () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
+                                                 jobSetting.CronExpression,
+                                                 new RecurringJobOptions
+                                                 {
+                                                     TimeZone = TimeZoneInfo.Local
+                                                 });
+#else
                 _recurringJobManager.AddOrUpdate(jobSetting.Identifiant,
                                                  () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
                                                  jobSetting.CronExpression, queue: jobSetting.QueueName);
+#endif
 
                 _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}'.");
             }
@@ -107,17 +118,27 @@ public class JobManager : IJobManager
 
     public Task<IEnumerable<CronJob>> GetRecurringJobsAsync(CancellationToken cancellationToken)
     {
-        List<RecurringJobDto>? recurringJobs = _jobStorage.GetConnection().GetRecurringJobs();
+        List<RecurringJobDto>? recurringJobs = _jobStorage.GetConnection()
+                                                          .GetRecurringJobs();
 
-        var jobs = new List<CronJob>();
+        return Task.FromResult(MapRecurringJobs(recurringJobs));
+    }
 
-        foreach (var recurringJob in recurringJobs)
+    public Task<IEnumerable<CronJob>> GetRecurringJobsAsync(ISet<string> ids,
+                                                            CancellationToken cancellationToken)
+    {
+        List<RecurringJobDto>? recurringJobs = _jobStorage.GetConnection()
+                                                          .GetRecurringJobs(ids);
+
+        return Task.FromResult(MapRecurringJobs(recurringJobs));
+    }
+
+    public async Task RemoveAsync(ISet<string> identifiants, CancellationToken cancellationToken)
+    {
+        foreach (var identifiant in identifiants)
         {
-            var job = _mapper.Map<CronJob>(recurringJob);
-            jobs.Add(job);
+            await RemoveAsync(identifiant, cancellationToken);
         }
-
-        return Task.FromResult(jobs as IEnumerable<CronJob>);
     }
 
     public Task RemoveAsync(string? identifiant, CancellationToken cancellationToken)
@@ -141,5 +162,18 @@ public class JobManager : IJobManager
     {
         _recurringJobManager.Trigger(identifiant);
         return Task.CompletedTask;
+    }
+
+    private IEnumerable<CronJob> MapRecurringJobs(IEnumerable<RecurringJobDto> recurringJobs)
+    {
+        var jobs = new List<CronJob>();
+
+        foreach (var recurringJob in recurringJobs)
+        {
+            var job = _mapper.Map<CronJob>(recurringJob);
+            jobs.Add(job);
+        }
+
+        return jobs;
     }
 }

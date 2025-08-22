@@ -4,5 +4,5 @@ public interface IRecurringJob
 {
     string Type { get; }
 
-    Task ExecuteAsync(string identifiant);
+    Task<JobResult> ExecuteAsync(string identifiant);
 }
