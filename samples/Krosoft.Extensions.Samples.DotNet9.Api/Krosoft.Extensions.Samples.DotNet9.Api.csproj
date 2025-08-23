@@ -13,7 +13,7 @@
 		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2025.8.20.1900" /> 
 	 
 		<PackageReference Include="Krosoft.Extensions.Options" Version="2025.8.19.1623" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.8.21.1936" /> 
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.8.23.2309" /> 
 		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2025.8.19.1589" />
  
 	  
