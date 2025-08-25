@@ -1,10 +1,11 @@
 ﻿using FluentValidation.TestHelper;
 using Krosoft.Extensions.Jobs.Tests.Core;
+using Krosoft.Extensions.Testing;
 
 namespace Krosoft.Extensions.Jobs.Tests.Validators;
 
 [TestClass]
-public class TriggerCreateCommandValidatorTests
+public class TriggerCreateCommandValidatorTests : BaseTest
 {
     private TriggerCreateCommandValidator _validator = null!;
 
