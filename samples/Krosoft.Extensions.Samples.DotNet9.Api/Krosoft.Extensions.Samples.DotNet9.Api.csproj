@@ -8,12 +8,12 @@
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 	<ItemGroup>
-	 	<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2025.9.9.2880" />
-	 	<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2025.9.9.2882" /> 
+	 	<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2025.9.10.2966" />
+	 	<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2025.9.10.2966" /> 
 		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2025.9.9.2881" /> 
 	 
 		<PackageReference Include="Krosoft.Extensions.Options" Version="2025.9.9.2895" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.9.9.2908" /> 
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.9.9.2937" /> 
 		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2025.9.9.2909" />
  
 	  

@@ -4,6 +4,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Krosoft.Extensions.Testing" Version="2025.9.9.2871" />
+		<PackageReference Include="Krosoft.Extensions.Testing" Version="2025.9.9.2934" />
 	 	</ItemGroup>
 </Project>
