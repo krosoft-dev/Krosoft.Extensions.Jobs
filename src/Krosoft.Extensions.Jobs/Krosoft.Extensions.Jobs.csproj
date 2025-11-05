@@ -6,34 +6,33 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
-		<PackageReference Include="FluentValidation" Version="11.11.0" />
+		<PackageReference Include="FluentValidation" Version="11.12.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-		<PackageReference Include="FluentValidation" Version="11.11.0" />
+		<PackageReference Include="FluentValidation" Version="11.12.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
-		<PackageReference Include="FluentValidation" Version="12.0.0" />
+		<PackageReference Include="FluentValidation" Version="12.1.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
-		<PackageReference Include="FluentValidation" Version="12.0.0" />
+		<PackageReference Include="FluentValidation" Version="12.1.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Remove="NewFolder\Models\**" />
-	  <EmbeddedResource Remove="NewFolder\Models\**" />
-	  <None Remove="NewFolder\Models\**" />
+		<Compile Remove="NewFolder\Models\**" />
+		<EmbeddedResource Remove="NewFolder\Models\**" />
+		<None Remove="NewFolder\Models\**" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Cronos" Version="0.11.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="NewFolder\Extensions\" />
-	  <Folder Include="NewFolder\Services\" />
+		<Folder Include="NewFolder\Extensions\" />
+		<Folder Include="NewFolder\Services\" />
 	</ItemGroup>
-	
 </Project>
