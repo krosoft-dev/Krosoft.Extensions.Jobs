@@ -11,7 +11,7 @@
 		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2025.11.13.4120" />
 		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2025.11.13.4122" />
 		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2025.11.13.4121" />
-		<PackageReference Include="Krosoft.Extensions.Options" Version="2025.11.12.4028" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2025.11.13.4150" />
 		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.11.12.3998" />
 		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2025.11.12.3999" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
