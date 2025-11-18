@@ -4,8 +4,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Krosoft.Extensions.Testing.WebApi" Version="2025.11.13.4314" />
-		<PackageReference Include="Krosoft.Extensions.Testing.Cqrs" Version="2025.11.13.4313" />
-		<PackageReference Include="Krosoft.Extensions.Testing" Version="2025.11.13.4314" />
+		<PackageReference Include="Krosoft.Extensions.Testing.Cqrs" Version="2025.11.17.4364" />
+		<PackageReference Include="Krosoft.Extensions.Testing" Version="2025.11.17.4364" />
 		<PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
 	</ItemGroup>
 </Project>
