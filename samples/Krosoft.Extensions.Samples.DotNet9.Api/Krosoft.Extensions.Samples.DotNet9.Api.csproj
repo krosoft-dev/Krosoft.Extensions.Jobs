@@ -9,8 +9,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2025.11.18.4395" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2025.11.18.4397" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2025.11.18.4396" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2025.11.18.4463" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2025.11.18.4463" />
 		<PackageReference Include="Krosoft.Extensions.Options" Version="2025.11.13.4150" />
 		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2025.11.18.4435" />
 		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2025.11.13.4272" />
