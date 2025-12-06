@@ -11,6 +11,7 @@ public interface IJobManager
     Task<IEnumerable<CronJob>> GetRecurringJobsAsync(ISet<string> ids, CancellationToken cancellationToken);
     Task RemoveAsync(ISet<string> identifiants, CancellationToken cancellationToken);
     Task RemoveAsync(string? identifiant, CancellationToken cancellationToken);
+    Task RemoveAllAsync(CancellationToken cancellationToken);
     Task TriggerAsync(CancellationToken cancellationToken);
     Task TriggerAsync(string? identifiant, CancellationToken cancellationToken);
 }

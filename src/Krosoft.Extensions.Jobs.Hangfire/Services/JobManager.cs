@@ -147,6 +147,22 @@ public class JobManager : IJobManager
         return Task.CompletedTask;
     }
 
+    public Task RemoveAllAsync(CancellationToken cancellationToken)
+    {
+        var recurringJobs = _jobStorage.GetConnection()
+                                       .GetRecurringJobs();
+
+        if (recurringJobs != null)
+        {
+            foreach (var recurringJob in recurringJobs)
+            {
+                _recurringJobManager.RemoveIfExists(recurringJob.Id);
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Task TriggerAsync(CancellationToken cancellationToken)
     {
         var recurringJobs = _jobStorage.GetConnection().GetRecurringJobs();
