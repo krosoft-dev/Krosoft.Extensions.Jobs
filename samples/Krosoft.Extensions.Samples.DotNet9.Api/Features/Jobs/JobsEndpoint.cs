@@ -1,5 +1,6 @@
 ﻿using Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.Jobs;
 using Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.JobTrigger;
+using Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.Stats;
 using Krosoft.Extensions.WebApi.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,9 @@ internal class JobsEndpoint : IEndpoint
         group.MapGet("/", (IMediator mediator,
                            CancellationToken cancellationToken)
                          => mediator.Send(new JobsQuery(), cancellationToken));
+        group.MapGet("/Stats", (IMediator mediator,
+                                CancellationToken cancellationToken)
+                         => mediator.Send(new JobsStatsQuery(), cancellationToken));
 
         group.MapPost("/Run/{identifiant}", (IMediator mediator,
                                              [FromRoute] string identifiant,
@@ -24,5 +28,3 @@ internal class JobsEndpoint : IEndpoint
                                                                    .DisableAntiforgery()
                                                                    .WithTags("Jobs");
 }
-
- 

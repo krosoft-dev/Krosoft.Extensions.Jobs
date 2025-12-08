@@ -5,5 +5,6 @@ internal static class Constantes
     public static class QueuesKeys
     {
         public const string Default = "default";
+        public const string Prio = "prio";
     }
 }

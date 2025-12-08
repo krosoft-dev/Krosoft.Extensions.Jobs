@@ -5,8 +5,6 @@ using Hangfire.Storage;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
-using Krosoft.Extensions.Jobs.Hangfire.Models.Modulus.Api.Features.Jobs.Monitoring;
-using Krosoft.Extensions.Jobs.Hangfire.Models.Modulus.Api.Features.Jobs.Monitoring.Modulus.Api.Features.Jobs.Monitoring;
 using Microsoft.Extensions.Logging;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Services;
@@ -216,8 +214,3 @@ public class JobManager : IJobManager
         return jobs;
     }
 }
-
-
-
-
-  
