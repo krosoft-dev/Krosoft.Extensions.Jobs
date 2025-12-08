@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1BA9DB0A-8961-4AA1-BB81-F8C2820FCB52}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krosoft.Extensions.Jobs.Hangfire.Storage.Redis", "src\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.csproj", "{1D5D13B0-7571-4CB1-B56D-B5CABC0FCF17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory", "src\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.csproj", "{048DF8BB-B3B0-4DAE-81B7-67F6DDD1E787}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "samples\docker-compose\docker-compose.dcproj", "{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{048DF8BB-B3B0-4DAE-81B7-67F6DDD1E787}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{048DF8BB-B3B0-4DAE-81B7-67F6DDD1E787}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{048DF8BB-B3B0-4DAE-81B7-67F6DDD1E787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{FDF7A4FE-F653-3555-A530-EC1036D3CF18} = {699E6411-C1FC-49BC-8853-66CDCB0B863A}
 		{1D5D13B0-7571-4CB1-B56D-B5CABC0FCF17} = {1BA9DB0A-8961-4AA1-BB81-F8C2820FCB52}
 		{048DF8BB-B3B0-4DAE-81B7-67F6DDD1E787} = {1BA9DB0A-8961-4AA1-BB81-F8C2820FCB52}
+		{F7EF3B40-7C46-4A58-B5DC-9E765C39DC00} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7FD07ECB-B4B5-4D65-8E03-10F0C97C77A9}

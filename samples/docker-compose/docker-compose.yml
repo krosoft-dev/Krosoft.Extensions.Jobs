@@ -1,0 +1,7 @@
+services:
+  krosoft-extensions.redis:
+    image: redis:7.2.5-alpine3.19
+    restart: on-failure
+
+  krosoft-extensions.samples.dotnet9.api:
+    image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.dotnet9.api:${TAG_VERSION}

@@ -47,13 +47,9 @@ builder.Services
                Constantes.QueuesKeys.Default,
                Constantes.QueuesKeys.Prio
            ];
-           options.WorkerCount = 1;
+           //options.WorkerCount = 1;
            options.UseInMemoryStorage();
-           options.UseRedisStorage("localhost:6378");
-
-           
-         
-
+           options.UseRedisStorage("krosoft-extensions.redis:6379");
        })
        .AddTransient<IJobsSettingStorageProvider, SettingsJobsSettingStorageProvider>()
        .AddTransient<IRecurringJob, AmqpJob>()
