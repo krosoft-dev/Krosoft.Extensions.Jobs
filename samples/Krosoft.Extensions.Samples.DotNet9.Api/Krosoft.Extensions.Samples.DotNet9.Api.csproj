@@ -17,6 +17,8 @@
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.csproj" />
+		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.csproj" />
 		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire\Krosoft.Extensions.Jobs.Hangfire.csproj" />
 	</ItemGroup>
 </Project>

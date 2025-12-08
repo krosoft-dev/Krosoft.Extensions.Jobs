@@ -12,7 +12,7 @@
       },
       "httpPort": 6001,
       "useSSL": false,
-      "DockerfileRunArguments": "--name krosoft-extensions.samples.dotnet8.api"
+      "DockerfileRunArguments": "--name Krosoft.Extensions.Samples.DotNet9.Api"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

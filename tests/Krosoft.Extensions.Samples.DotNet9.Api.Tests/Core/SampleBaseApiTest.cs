@@ -1,4 +1,7 @@
 ﻿using Krosoft.Extensions.Core.Models;
+using Krosoft.Extensions.Jobs.Hangfire.Extensions;
+using Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.Extensions;
+using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
 using Krosoft.Extensions.Testing.WebApi;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +21,7 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
         //services.AddDbContextInMemory<KrosoftExtensionTenantContext>(true);
         //services.AddSeedService<KrosoftExtensionTenantContext, SampleSeedService>();
 
-        // Remove Redis registration.
+       
         //services.MockRedis();
         //services.AddTransient<IDistributedCacheProvider, DictionaryCacheProvider>();
 
@@ -30,5 +33,19 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
         //mock.Setup(x => x.PublishAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
         //    .Returns(() => Task.CompletedTask);
         //services.SwapTransient(_ => mock.Object);
+
+
+
+        services.AddHangfireExt(options =>
+        {
+            options.Queues =
+            [
+                Constantes.QueuesKeys.Default,
+                Constantes.QueuesKeys.Prio
+            ];
+            options.WorkerCount = 1;
+            // Force InMemory pour les tests.
+            options.UseInMemoryStorage(); 
+        });
     }
 }

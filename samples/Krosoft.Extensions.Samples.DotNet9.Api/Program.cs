@@ -6,6 +6,8 @@ using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Jobs.Hangfire.Profiles;
+using Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.Extensions;
+using Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Extensions;
 using Krosoft.Extensions.Options.Extensions;
 using Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
@@ -32,21 +34,22 @@ builder.Services
        .AddWebApi(builder.Configuration, assemblies)
        //CQRS.
        .AddBehaviors(options => options.AddLogging()
-                                       .AddValidations()
-                    )
+                                       .AddValidations())
        //Swagger.
        .AddSwagger(currentAssembly, options => options.AddHealthChecks()
-                                                      .AddGlobalResponses()
-                  )
+                                                      .AddGlobalResponses())
 
 //Jobs
        .AddHangfireExt(options =>
        {
            options.Queues =
            [
-               Constantes.QueuesKeys.Default
+               Constantes.QueuesKeys.Default,
+               Constantes.QueuesKeys.Prio
            ];
-           options.WorkerCount = 1;
+           options.WorkerCount = 21;
+           options.UseInMemoryStorage();
+           options.UseRedisStorage("krosoft-extensions.redis:6379");
        })
        .AddTransient<IJobsSettingStorageProvider, SettingsJobsSettingStorageProvider>()
        .AddTransient<IRecurringJob, AmqpJob>()

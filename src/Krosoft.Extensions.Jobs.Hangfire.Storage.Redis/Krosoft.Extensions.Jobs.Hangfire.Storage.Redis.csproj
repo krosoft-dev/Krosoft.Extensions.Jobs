@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageTags>Krosoft Extension Jobs Hangfire Storage Redis</PackageTags>
+        <Description>Package pour faciliter le stockage de jobs Hangfire avec Redis.</Description>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'"> 
+	    <PackageReference Include="Hangfire.Redis.StackExchange" Version="1.12.0" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'"> 
+	    <PackageReference Include="Hangfire.Redis.StackExchange" Version="1.12.0" />
+    </ItemGroup>
+    <ItemGroup>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Krosoft.Extensions.Jobs.Hangfire\Krosoft.Extensions.Jobs.Hangfire.csproj" />
+    </ItemGroup>
+</Project>
