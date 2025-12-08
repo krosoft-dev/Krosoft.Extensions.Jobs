@@ -181,18 +181,18 @@ public class JobManager : IJobManager
         return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<JobContext>> GetStatisticsAsync(CancellationToken cancellationToken)
+    public Task<SystemStatistics> GetStatisticsAsync(CancellationToken cancellationToken)
     {
         var stats = _monitoringApi.GetStatistics();
         var servers = _monitoringApi.Servers();
 
-        return Task.FromResult(new JobsMonitoringDto
+        return Task.FromResult(new SystemStatistics
         {
             Enqueued = stats.Enqueued,
             Processing = stats.Processing,
             Succeeded = stats.Succeeded,
             Failed = stats.Failed,
-            Servers = servers.Select(s => new JobsMonitoring2Dto
+            Servers = servers.Select(s => new SystemServer
             {
                 Name = s.Name,
                 WorkersCount = s.WorkersCount,

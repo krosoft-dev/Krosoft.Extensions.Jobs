@@ -16,19 +16,19 @@ public interface IJob
 
 
  
-internal record JobsMonitoringDto
+internal record SystemStatistics
 {
 
     public long Enqueued { get; set; }
     public long Processing { get; set; }
     public long Succeeded { get; set; }
     public long Failed { get; set; }
-    public IEnumerable<JobsMonitoring2Dto> Servers { get; set; } = new List<JobsMonitoring2Dto>();
+    public IEnumerable<SystemServer> Servers { get; set; } = new List<SystemServer>();
 }
 
  
 
-internal record JobsMonitoring2Dto
+internal record SystemServer
 {
     public string? Name { get; set; }
     public int WorkersCount { get; set; }
