@@ -16,5 +16,5 @@ public interface IJobManager
     Task TriggerAsync(string? identifiant, CancellationToken cancellationToken);
 
 
-    Task<IEnumerable<JobContext>> GetStatsAsync(  CancellationToken cancellationToken);
+    Task<IEnumerable<JobContext>> GetStatisticsAsync(  CancellationToken cancellationToken);
 }

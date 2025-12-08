@@ -5,6 +5,8 @@ using Hangfire.Storage;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
+using Krosoft.Extensions.Jobs.Hangfire.Models.Modulus.Api.Features.Jobs.Monitoring;
+using Krosoft.Extensions.Jobs.Hangfire.Models.Modulus.Api.Features.Jobs.Monitoring.Modulus.Api.Features.Jobs.Monitoring;
 using Microsoft.Extensions.Logging;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Services;
@@ -31,7 +33,6 @@ public class JobManager : IJobManager
                       IBackgroundJobClient backgroundJobClient)
     {
         _recurringJobManager = recurringJobManager;
-
         _logger = logger;
         _jobs = jobs;
         _recurringjobs = recurringjobs;
@@ -180,65 +181,10 @@ public class JobManager : IJobManager
         return Task.CompletedTask;
     }
 
-    private IEnumerable<CronJob> MapRecurringJobs(IEnumerable<RecurringJobDto> recurringJobs)
+    public Task<IEnumerable<JobContext>> GetStatisticsAsync(CancellationToken cancellationToken)
     {
-        var jobs = new List<CronJob>();
-
-        foreach (var recurringJob in recurringJobs)
-        {
-            var job = _mapper.Map<CronJob>(recurringJob);
-            jobs.Add(job);
-        }
-
-        return jobs;
-    }
-}
-
-
-
-
-
-
-
-
-using AutoMapper;
-using Hangfire;
-using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
-using MediatR;
-
-//using Hangfire;
-//using Microsoft.AspNetCore.Mvc;
-
-//using Hangfire;
-//using Microsoft.AspNetCore.Mvc;
-
-namespace Modulus.Api.Features.Jobs.Monitoring;
-
-internal class JobsMonitoringQueryHandler : IRequestHandler<JobsMonitoringQuery, JobsMonitoringDto>
-{
-    private readonly IJobManager _jobManager;
-    private readonly IJobsSettingStorageProvider _jobsSettingStorageProvider;
-    private readonly ILogger<JobsMonitoringQueryHandler> _logger;
-    private readonly IMapper _mapper;
-
-    public JobsMonitoringQueryHandler(ILogger<JobsMonitoringQueryHandler> logger,
-                                      IMapper mapper,
-                                      IJobManager jobManager,
-                                      IJobsSettingStorageProvider jobsSettingStorageProvider)
-    {
-        _logger = logger;
-        _mapper = mapper;
-        _jobManager = jobManager;
-        _jobsSettingStorageProvider = jobsSettingStorageProvider;
-    }
-
-    public Task<JobsMonitoringDto> Handle(JobsMonitoringQuery request, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Récupération du monitoring des jobs...");
-
-        var monitoring = JobStorage.Current.GetMonitoringApi();
-        var stats = monitoring.GetStatistics();
-        var servers = monitoring.Servers();
+        var stats = _monitoringApi.GetStatistics();
+        var servers = _monitoringApi.Servers();
 
         return Task.FromResult(new JobsMonitoringDto
         {
@@ -256,4 +202,22 @@ internal class JobsMonitoringQueryHandler : IRequestHandler<JobsMonitoringQuery,
             })
         });
     }
+
+    private IEnumerable<CronJob> MapRecurringJobs(IEnumerable<RecurringJobDto> recurringJobs)
+    {
+        var jobs = new List<CronJob>();
+
+        foreach (var recurringJob in recurringJobs)
+        {
+            var job = _mapper.Map<CronJob>(recurringJob);
+            jobs.Add(job);
+        }
+
+        return jobs;
+    }
 }
+
+
+
+
+  

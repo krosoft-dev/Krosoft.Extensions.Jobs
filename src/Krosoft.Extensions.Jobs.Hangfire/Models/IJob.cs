@@ -15,9 +15,7 @@ public interface IJob
 }
 
 
-
-namespace Modulus.Api.Features.Jobs.Monitoring;
-
+ 
 internal record JobsMonitoringDto
 {
 
@@ -28,8 +26,7 @@ internal record JobsMonitoringDto
     public IEnumerable<JobsMonitoring2Dto> Servers { get; set; } = new List<JobsMonitoring2Dto>();
 }
 
-
-namespace Modulus.Api.Features.Jobs.Monitoring;
+ 
 
 internal record JobsMonitoring2Dto
 {
