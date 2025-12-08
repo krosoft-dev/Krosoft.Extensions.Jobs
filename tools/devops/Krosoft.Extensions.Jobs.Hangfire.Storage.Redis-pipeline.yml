@@ -21,5 +21,6 @@ extends:
   template: tools/devops/templates/pipelines/nuget-template.yml@Krosoft.Extensions
   parameters:
     packages:
+     - "Krosoft.Extensions.Jobs.Hangfire"
      - "Krosoft.Extensions.Jobs.Hangfire.Storage.Redis"
 
