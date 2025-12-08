@@ -193,3 +193,67 @@ public class JobManager : IJobManager
         return jobs;
     }
 }
+
+
+
+
+
+
+
+
+using AutoMapper;
+using Hangfire;
+using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
+using MediatR;
+
+//using Hangfire;
+//using Microsoft.AspNetCore.Mvc;
+
+//using Hangfire;
+//using Microsoft.AspNetCore.Mvc;
+
+namespace Modulus.Api.Features.Jobs.Monitoring;
+
+internal class JobsMonitoringQueryHandler : IRequestHandler<JobsMonitoringQuery, JobsMonitoringDto>
+{
+    private readonly IJobManager _jobManager;
+    private readonly IJobsSettingStorageProvider _jobsSettingStorageProvider;
+    private readonly ILogger<JobsMonitoringQueryHandler> _logger;
+    private readonly IMapper _mapper;
+
+    public JobsMonitoringQueryHandler(ILogger<JobsMonitoringQueryHandler> logger,
+                                      IMapper mapper,
+                                      IJobManager jobManager,
+                                      IJobsSettingStorageProvider jobsSettingStorageProvider)
+    {
+        _logger = logger;
+        _mapper = mapper;
+        _jobManager = jobManager;
+        _jobsSettingStorageProvider = jobsSettingStorageProvider;
+    }
+
+    public Task<JobsMonitoringDto> Handle(JobsMonitoringQuery request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Récupération du monitoring des jobs...");
+
+        var monitoring = JobStorage.Current.GetMonitoringApi();
+        var stats = monitoring.GetStatistics();
+        var servers = monitoring.Servers();
+
+        return Task.FromResult(new JobsMonitoringDto
+        {
+            Enqueued = stats.Enqueued,
+            Processing = stats.Processing,
+            Succeeded = stats.Succeeded,
+            Failed = stats.Failed,
+            Servers = servers.Select(s => new JobsMonitoring2Dto
+            {
+                Name = s.Name,
+                WorkersCount = s.WorkersCount,
+                Queues = s.Queues,
+                StartedAt = s.StartedAt,
+                Heartbeat = s.Heartbeat
+            })
+        });
+    }
+}
