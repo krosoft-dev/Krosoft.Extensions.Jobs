@@ -47,7 +47,7 @@ builder.Services
                Constantes.QueuesKeys.Default,
                Constantes.QueuesKeys.Prio
            ];
-           //options.WorkerCount = 1;
+           options.WorkerCount = 21;
            options.UseInMemoryStorage();
            options.UseRedisStorage("krosoft-extensions.redis:6379");
        })

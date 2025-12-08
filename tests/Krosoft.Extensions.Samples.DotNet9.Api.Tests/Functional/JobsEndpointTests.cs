@@ -2,6 +2,7 @@ using System.Net;
 using JetBrains.Annotations;
 using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Models.Dto;
+using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs;
 using Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.Jobs;
 using Krosoft.Extensions.Samples.DotNet9.Api.Tests.Core;
@@ -23,6 +24,19 @@ public class JobsEndpointTests : SampleBaseApiTest<Program>
         Check.That(jobs).IsNotNull();
         Check.That(jobs).HasSize(1);
         Check.That(jobs.Select(x => x.Identifiant)).ContainsExactly("CHECK");
+    }
+
+    [TestMethod]
+    public async Task Get_Stats_Ok()
+    {
+        var httpClient = Factory.CreateClient();
+        var response = await httpClient.GetAsync("/Jobs/Stats");
+
+        Check.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
+        var statistics = await response.Content.ReadAsNewtonsoftJsonAsync<SystemStatistics>(CancellationToken.None);
+        Check.That(statistics).IsNotNull(); 
+        Check.That(statistics!.Servers).IsNotNull(); 
+        Check.That(statistics.Servers.SelectMany(x => x.Queues).ToHashSet()).ContainsExactly("default", "prio");
     }
 
     [TestMethod]
