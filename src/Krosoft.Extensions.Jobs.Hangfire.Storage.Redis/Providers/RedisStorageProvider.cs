@@ -1,7 +1,10 @@
 ﻿#if NET9_0_OR_GREATER
 using Hangfire;
 using Hangfire.Redis.StackExchange;
+using Krosoft.Extensions.Core.Models.Exceptions;
+using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
+using StackExchange.Redis;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Providers;
 
@@ -10,22 +13,38 @@ namespace Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Providers;
 /// </summary>
 public class RedisStorageProvider : IHangfireStorageProvider
 {
-    private readonly string _connectionString;
+    private readonly Lazy<IConnectionMultiplexer>? _connection;
     private readonly RedisStorageOptions? _options;
 
-    public RedisStorageProvider(string connectionString, RedisStorageOptions? options = null)
+    public RedisStorageProvider(string? connectionString, RedisStorageOptions? options = null)
     {
-        _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+        Guard.IsNotNullOrWhiteSpace(nameof(connectionString), connectionString);
+
+        _connection = new Lazy<IConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString!));
         _options = options;
     }
 
+    public IConnectionMultiplexer Connection
+    {
+        get
+        {
+            if (_connection != null)
+            {
+                return _connection.Value;
+            }
+
+            throw new KrosoftTechnicalException("Connection non disponible !");
+        }
+    }
+
+  
     public void ConfigureStorage(IGlobalConfiguration configuration)
     {
-        configuration.UseRedisStorage(_connectionString, _options ??
-                                                         new RedisStorageOptions
-                                                         {
-                                                             Prefix = "hangfire:"
-                                                         });
+        configuration.UseRedisStorage(Connection, _options ??
+                                                  new RedisStorageOptions
+                                                  {
+                                                      Prefix = "hangfire:"
+                                                  });
     }
 }
 

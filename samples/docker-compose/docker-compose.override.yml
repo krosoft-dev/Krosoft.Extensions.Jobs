@@ -1,7 +1,16 @@
 services:
-  krosoft-extensions.redis:
+  krosoft-extensions.redis: 
+    restart: unless-stopped
+    command: redis-server --requirepass EI0hKU2OBfPHNPfd
+    environment:
+      - REDIS_PASSWORD=EI0hKU2OBfPHNPfd
     ports:
-      - "6376:6379"
+          - "6376:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "EI0hKU2OBfPHNPfd", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3      
 
   krosoft-extensions.samples.dotnet9.api:
     build:
