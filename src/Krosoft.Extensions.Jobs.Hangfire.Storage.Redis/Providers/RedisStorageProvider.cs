@@ -24,7 +24,7 @@ public class RedisStorageProvider : IHangfireStorageProvider
         _options = options;
     }
 
-    public IConnectionMultiplexer Connection
+    private IConnectionMultiplexer Connection
     {
         get
         {
@@ -37,7 +37,6 @@ public class RedisStorageProvider : IHangfireStorageProvider
         }
     }
 
-  
     public void ConfigureStorage(IGlobalConfiguration configuration)
     {
         configuration.UseRedisStorage(Connection, _options ??
