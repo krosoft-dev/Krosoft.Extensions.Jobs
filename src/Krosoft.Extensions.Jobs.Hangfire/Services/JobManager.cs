@@ -2,6 +2,7 @@
 using Hangfire;
 using Hangfire.States;
 using Hangfire.Storage;
+using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
@@ -62,7 +63,7 @@ public class JobManager : IJobManager
     public async Task AddOrUpdateRecurringJobsAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Récupération des settings des jobs...");
-        var jobsSetting = await _jobsSettingStorageProvider.GetAsync(cancellationToken);
+        var jobsSetting = await _jobsSettingStorageProvider.GetAsync(cancellationToken)!.ToList();
         foreach (var jobSetting in jobsSetting)
         {
             var recurringJob = _recurringjobs.FirstOrDefault(x => x.Type == jobSetting.Type);
@@ -83,13 +84,15 @@ public class JobManager : IJobManager
                                                  jobSetting.CronExpression, queue: jobSetting.QueueName);
 #endif
 
-                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}'.");
+                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}'.");
             }
             else
             {
                 throw new KrosoftTechnicalException($"RecurringJob introuvable pour le type {jobSetting.Type}");
             }
         }
+
+        _logger.LogInformation($"{jobsSetting.Count()} recurring jobs configurés.");
     }
 
     public async Task<IEnumerable<JobContext>> GetEnqueuedJobsAsync(string? queueName, CancellationToken cancellationToken)

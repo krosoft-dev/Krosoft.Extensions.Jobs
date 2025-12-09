@@ -45,7 +45,8 @@ builder.Services
            options.Queues =
            [
                Constantes.QueuesKeys.Default,
-               Constantes.QueuesKeys.Prio
+               Constantes.QueuesKeys.Prio,
+               Constantes.QueuesKeys.System,
            ];
            options.WorkerCount = 21;
            //options.UseInMemoryStorage();
@@ -53,6 +54,7 @@ builder.Services
        })
        .AddTransient<IJobsSettingStorageProvider, SettingsJobsSettingStorageProvider>()
        .AddTransient<IRecurringJob, AmqpJob>()
+       .AddTransient<IRecurringJob, SoLongJob>()
 
 //Autres
        .AddDateTimeService()

@@ -1,25 +1,24 @@
 ﻿using System.Diagnostics;
 using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Tools;
+using Krosoft.Extensions.Jobs.Hangfire.Attributes;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
-using Microsoft.Extensions.Options;
 
 namespace Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
 
-internal class AmqpJob : IRecurringJob
+internal class SoLongJob : IRecurringJob
 {
-    private readonly ILogger<AmqpJob> _logger;
-    private readonly IOptions<AppSettings> _options;
+    private readonly ILogger<SoLongJob> _logger;
 
-    public AmqpJob(ILogger<AmqpJob> logger, IOptions<AppSettings> options)
+    public SoLongJob(ILogger<SoLongJob> logger)
     {
         _logger = logger;
-        _options = options;
     }
 
-    public string Type => nameof(JobTypeCode.Amqp);
+    public string Type => nameof(JobTypeCode.SoLong);
 
+    [ExecuteOnce]
     public async Task<JobResult> ExecuteAsync(string identifiant)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);
@@ -31,14 +30,8 @@ internal class AmqpJob : IRecurringJob
 
         try
         {
-            var jobSetting = _options.Value.JobsAmqp.FirstOrDefault(x => x.Identifiant == identifiant);
-            if (jobSetting == null)
-            {
-                throw new JobIntrouvableException(identifiant);
-            }
-
             _logger.LogInformation($"Exécution du job '{identifiant}'...");
-            await Task.Delay(2000, cancellationToken);
+            await ProcessLongRunningTask(cancellationToken);
 
             return new JobResult(identifiant, sw.Elapsed, null);
         }
@@ -51,5 +44,11 @@ internal class AmqpJob : IRecurringJob
         {
             _logger.LogInformation($"Exécution du job '{identifiant}' terminée en {sw.Elapsed.ToShortString()}.");
         }
+    }
+
+    private static async Task ProcessLongRunningTask(CancellationToken cancellationToken)
+    {
+        // Simulation d'un traitement long
+        await Task.Delay(TimeSpan.FromMinutes(7), cancellationToken);
     }
 }

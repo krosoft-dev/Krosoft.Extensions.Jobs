@@ -2,5 +2,6 @@
 
 public enum JobTypeCode
 {
-    Amqp = 1
+    Amqp = 1,
+    SoLong = 2,
 }
