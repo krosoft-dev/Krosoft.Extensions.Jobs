@@ -7,6 +7,7 @@ using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
 
 namespace Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
 
+[ExecuteOnce]
 internal class SoLongJob : IRecurringJob
 {
     private readonly ILogger<SoLongJob> _logger;
@@ -18,7 +19,6 @@ internal class SoLongJob : IRecurringJob
 
     public string Type => nameof(JobTypeCode.SoLong);
 
-    [ExecuteOnce]
     public async Task<JobResult> ExecuteAsync(string identifiant)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);

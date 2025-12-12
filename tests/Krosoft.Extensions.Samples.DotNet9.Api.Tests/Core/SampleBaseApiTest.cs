@@ -21,7 +21,6 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
         //services.AddDbContextInMemory<KrosoftExtensionTenantContext>(true);
         //services.AddSeedService<KrosoftExtensionTenantContext, SampleSeedService>();
 
-       
         //services.MockRedis();
         //services.AddTransient<IDistributedCacheProvider, DictionaryCacheProvider>();
 
@@ -34,8 +33,6 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
         //    .Returns(() => Task.CompletedTask);
         //services.SwapTransient(_ => mock.Object);
 
-
-
         services.AddHangfireExt(options =>
         {
             options.Queues =
@@ -45,7 +42,7 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
             ];
             options.WorkerCount = 1;
             // Force InMemory pour les tests.
-            options.UseInMemoryStorage(); 
+            options.UseInMemoryStorage();
         });
     }
 }
