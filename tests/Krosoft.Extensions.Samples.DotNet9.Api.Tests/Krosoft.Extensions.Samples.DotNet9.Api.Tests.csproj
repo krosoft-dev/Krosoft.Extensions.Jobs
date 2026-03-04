@@ -5,7 +5,7 @@
 	<ItemGroup>
 		<PackageReference Include="Krosoft.Extensions.Testing.WebApi" Version="2026.3.2.5764" />
 		<PackageReference Include="Krosoft.Extensions.Testing.Cqrs" Version="2026.3.2.5762" />
-		<PackageReference Include="Krosoft.Extensions.Testing" Version="2026.3.2.5766" />
+		<PackageReference Include="Krosoft.Extensions.Testing" Version="2026.3.3.5813" />
 		<PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
 	</ItemGroup>
 </Project>
