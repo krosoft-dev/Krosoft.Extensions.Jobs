@@ -19,7 +19,7 @@ namespace Krosoft.Extensions.Jobs.Hangfire.Tests.Profiles
         [TestMethod]
         public void Map_RecurringJobDto_To_CronJob_Should_Be_Valid()
         {
-            // Arrange
+          
             var recurringJobDto = new RecurringJobDto
             {
                 Id = "job1",
@@ -30,10 +30,10 @@ namespace Krosoft.Extensions.Jobs.Hangfire.Tests.Profiles
                 CreatedAt = DateTime.UtcNow.AddMonths(-1)
             };
 
-            // Act
+        
             var cronJob = _mapper.Map<CronJob>(recurringJobDto);
 
-            // Assert
+            
             Check.That(cronJob.Identifiant).IsEqualTo(recurringJobDto.Id);
             Check.That(cronJob.CronExpression).IsEqualTo(recurringJobDto.Cron);
             Check.That(cronJob.ProchaineExecutionDate).IsEqualTo(recurringJobDto.NextExecution);
