@@ -12,18 +12,18 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 FROM mcr.microsoft.com/dotnet/sdk:$VERSION AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Krosoft.Extensions.Samples.DotNet8.Api/Krosoft.Extensions.Samples.DotNet8.Api.csproj", "Krosoft.Extensions.Samples.DotNet8.Api/"]
-RUN dotnet restore "Krosoft.Extensions.Samples.DotNet8.Api/Krosoft.Extensions.Samples.DotNet8.Api.csproj"
+COPY ["Krosoft.Extensions.Samples.DotNet9.Api/Krosoft.Extensions.Samples.DotNet9.Api.csproj", "Krosoft.Extensions.Samples.DotNet9.Api/"]
+RUN dotnet restore "Krosoft.Extensions.Samples.DotNet9.Api/Krosoft.Extensions.Samples.DotNet9.Api.csproj"
 COPY . .
-WORKDIR "/src/Krosoft.Extensions.Samples.DotNet8.Api"
-RUN dotnet build "Krosoft.Extensions.Samples.DotNet8.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build 
+WORKDIR "/src/Krosoft.Extensions.Samples.DotNet9.Api"
+RUN dotnet build "Krosoft.Extensions.Samples.DotNet9.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build 
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Krosoft.Extensions.Samples.DotNet8.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish  --no-restore
+RUN dotnet publish "Krosoft.Extensions.Samples.DotNet9.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish  --no-restore
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Krosoft.Extensions.Samples.DotNet8.Api.dll"]
+ENTRYPOINT ["dotnet", "Krosoft.Extensions.Samples.DotNet9.Api.dll"]
  

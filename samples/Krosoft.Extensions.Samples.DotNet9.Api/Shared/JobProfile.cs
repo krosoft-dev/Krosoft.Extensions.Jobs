@@ -2,6 +2,7 @@
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Mapping.Extensions;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
+using Krosoft.Extensions.Samples.Shared.Models;
 
 namespace Krosoft.Extensions.Samples.DotNet9.Api.Shared;
 
@@ -13,7 +14,7 @@ public class JobProfile : Profile
             .ForMember(dest => dest.Identifiant, o => o.MapFrom(src => src.Identifiant))
             .ForMember(dest => dest.CronExpression, o => o.MapFrom(src => src.CronExpression))
             .ForMember(dest => dest.Type, o => o.MapFrom(src => JobTypeCode.Amqp))
-            .ForMember(dest => dest.QueueName, o => o.MapFrom(src => Constantes.QueuesKeys.Default))
+            .ForMember(dest => dest.QueueName, o => o.MapFrom(src => Constants.QueuesKeys.Default))
             .ForAllOtherMembers(m => m.Ignore());
     }
 }

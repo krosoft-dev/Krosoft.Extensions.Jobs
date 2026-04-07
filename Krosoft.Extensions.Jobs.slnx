@@ -5,6 +5,9 @@
     </Project>
     <Project Path="samples/Krosoft.Extensions.Samples.DotNet10.Api/Krosoft.Extensions.Samples.DotNet10.Api.csproj" />
     <Project Path="samples/Krosoft.Extensions.Samples.DotNet9.Api/Krosoft.Extensions.Samples.DotNet9.Api.csproj" />
+    <Project Path="samples/Krosoft.Extensions.Samples.Shared/Krosoft.Extensions.Samples.Shared.csproj" Id="ac1dffb2-e80a-468b-b779-39652f05e7aa" />
+    <Project Path="samples/Krosoft.Extensions.Samples.Worker1/Krosoft.Extensions.Samples.Worker1.csproj" Id="658b14d3-3cd6-4f91-989e-189fa331ef1c" />
+    <Project Path="samples/Krosoft.Extensions.Samples.Worker2/Krosoft.Extensions.Samples.Worker2.csproj" Id="c476231d-c891-4b24-bdda-47ebd382e822" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory/Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.csproj" />

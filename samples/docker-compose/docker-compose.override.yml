@@ -1,16 +1,16 @@
 services:
-  krosoft-extensions.redis: 
+  krosoft-extensions.redis:
     restart: unless-stopped
     command: redis-server --requirepass EI0hKU2OBfPHNPfd
     environment:
       - REDIS_PASSWORD=EI0hKU2OBfPHNPfd
     ports:
-          - "6376:6379"
+      - "6376:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "EI0hKU2OBfPHNPfd", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 3      
+      retries: 3
 
   krosoft-extensions.samples.dotnet9.api:
     build:
@@ -22,7 +22,6 @@ services:
     ports:
       - "6009:5000"
 
-
   krosoft-extensions.samples.dotnet10.api:
     build:
       context: ..
@@ -32,3 +31,17 @@ services:
       - ASPNETCORE_URLS=http://+:5000
     ports:
       - "6010:5000"
+
+  krosoft-extensions.samples.worker1:
+    build:
+      context: ..
+      dockerfile:  Krosoft.Extensions.Samples.Worker1/Dockerfile
+    deploy:
+      replicas: 2
+
+  krosoft-extensions.samples.worker2:
+    build:
+      context: ..
+      dockerfile:  Krosoft.Extensions.Samples.Worker2/Dockerfile
+    deploy:
+      replicas: 2

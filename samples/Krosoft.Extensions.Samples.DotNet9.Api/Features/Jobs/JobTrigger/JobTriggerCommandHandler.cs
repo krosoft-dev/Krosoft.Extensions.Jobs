@@ -1,5 +1,5 @@
 ﻿using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
-using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
+using Krosoft.Extensions.Samples.Shared.Models;
 using MediatR;
 
 namespace Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.JobTrigger;

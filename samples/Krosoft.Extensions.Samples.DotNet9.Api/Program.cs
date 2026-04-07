@@ -5,12 +5,13 @@ using Krosoft.Extensions.Cqrs.Behaviors.Validations.Extensions;
 using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
-using Krosoft.Extensions.Jobs.Hangfire.Profiles; 
+using Krosoft.Extensions.Jobs.Hangfire.Profiles;
 using Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Extensions;
 using Krosoft.Extensions.Options.Extensions;
 using Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Services;
+using Krosoft.Extensions.Samples.Shared.Models;
 using Krosoft.Extensions.WebApi.Extensions;
 using Krosoft.Extensions.WebApi.HealthChecks.Extensions;
 using Krosoft.Extensions.WebApi.Swagger.Extensions;
@@ -18,7 +19,6 @@ using Krosoft.Extensions.WebApi.Swagger.HealthChecks.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var currentAssembly = Assembly.GetExecutingAssembly();
-
 var assemblies = new[]
 {
     currentAssembly,
@@ -43,10 +43,10 @@ builder.Services
        {
            options.Queues =
            [
-               Constantes.QueuesKeys.Default,
-               Constantes.QueuesKeys.Prio,
-               Constantes.QueuesKeys.System,
-               Constantes.QueuesKeys.Worker,
+               Constants.QueuesKeys.Default,
+               Constants.QueuesKeys.Prio,
+               Constants.QueuesKeys.System,
+               Constants.QueuesKeys.Api9
            ];
            options.WorkerCount = 9;
            //options.UseInMemoryStorage();
@@ -54,7 +54,6 @@ builder.Services
        })
        .AddTransient<IJobsSettingStorageProvider, SettingsJobsSettingStorageProvider>()
        .AddTransient<IRecurringJob, AmqpJob>()
-       .AddTransient<IRecurringJob, SoLongJob>()
 
 //Autres
        .AddDateTimeService()

@@ -1,4 +1,4 @@
-﻿using Krosoft.Extensions.Samples.DotNet10.Api.Shared.Models;
+﻿using Krosoft.Extensions.Samples.Shared.Models;
 
 namespace Krosoft.Extensions.Samples.DotNet10.Api.Features.Jobs.Jobs;
 

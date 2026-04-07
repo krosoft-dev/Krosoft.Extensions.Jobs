@@ -21,6 +21,11 @@ public static class ServiceCollectionExtensions
         var options = new KrosoftBackgroundJobServerOptions();
         action(options);
 
+        var appName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name;
+        var machineName = Environment.MachineName;
+
+        options.ServerName = $"{appName}_{machineName}";
+
         // Validation du provider de stockage
         if (options.StorageProvider == null)
         {

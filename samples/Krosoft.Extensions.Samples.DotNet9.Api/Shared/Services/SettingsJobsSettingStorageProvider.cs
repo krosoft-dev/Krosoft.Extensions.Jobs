@@ -20,9 +20,6 @@ internal class SettingsJobsSettingStorageProvider : IJobsSettingStorageProvider
     public Task<IEnumerable<IJobAutomatiqueSetting>> GetAsync(CancellationToken cancellationToken)
     {
         var jobsSettings = new List<IJobAutomatiqueSetting>();
-        jobsSettings.Add(AddSystemJob(JobTypeCode.SoLong, "* * * * *"));
-        jobsSettings.Add(AddSystemJob(JobTypeCode.SoLong, "* * * * *"));
-        jobsSettings.Add(AddSystemJob(JobTypeCode.SoLong, "* * * * *"));
 
         foreach (var jobSettings in _options.Value.JobsAmqp)
         {
@@ -31,14 +28,4 @@ internal class SettingsJobsSettingStorageProvider : IJobsSettingStorageProvider
 
         return Task.FromResult<IEnumerable<IJobAutomatiqueSetting>>(jobsSettings);
     }
-
-    private static IJobAutomatiqueSetting AddSystemJob(JobTypeCode jobTypeCode,
-                                                       string cronExpression) =>
-        new JobAutomatiqueSetting
-        {
-            Identifiant = $"System_{jobTypeCode}",
-            CronExpression = cronExpression,
-            Type = jobTypeCode.ToString(),
-            QueueName = Constantes.QueuesKeys.System
-        };
 }
