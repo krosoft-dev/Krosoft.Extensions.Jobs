@@ -6,3 +6,6 @@ services:
 
   krosoft-extensions.samples.dotnet9.api:
     image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.dotnet9.api:${TAG_VERSION}
+
+  krosoft-extensions.samples.dotnet10.api:
+    image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.dotnet10.api:${TAG_VERSION}

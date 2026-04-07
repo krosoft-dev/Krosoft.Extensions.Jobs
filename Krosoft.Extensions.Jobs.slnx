@@ -3,6 +3,7 @@
     <Project Path="samples/docker-compose/docker-compose.dcproj">
       <Build />
     </Project>
+    <Project Path="samples/Krosoft.Extensions.Samples.DotNet10.Api/Krosoft.Extensions.Samples.DotNet10.Api.csproj" />
     <Project Path="samples/Krosoft.Extensions.Samples.DotNet9.Api/Krosoft.Extensions.Samples.DotNet9.Api.csproj" />
   </Folder>
   <Folder Name="/src/">

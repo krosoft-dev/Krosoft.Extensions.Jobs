@@ -8,9 +8,9 @@ using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Jobs.Hangfire.Profiles; 
 using Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Extensions;
 using Krosoft.Extensions.Options.Extensions;
-using Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
-using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
-using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Services;
+using Krosoft.Extensions.Samples.DotNet10.Api.Jobs;
+using Krosoft.Extensions.Samples.DotNet10.Api.Shared.Models;
+using Krosoft.Extensions.Samples.DotNet10.Api.Shared.Services;
 using Krosoft.Extensions.WebApi.Extensions;
 using Krosoft.Extensions.WebApi.HealthChecks.Extensions;
 using Krosoft.Extensions.WebApi.Swagger.Extensions;
@@ -43,18 +43,14 @@ builder.Services
        {
            options.Queues =
            [
-               Constantes.QueuesKeys.Default,
-               Constantes.QueuesKeys.Prio,
-               Constantes.QueuesKeys.System,
                Constantes.QueuesKeys.Worker,
            ];
-           options.WorkerCount = 9;
+           options.WorkerCount = 10;
            //options.UseInMemoryStorage();
            options.UseRedisStorage("krosoft.redis:6379,password=EI0hKU2OBfPHNPfd");
        })
        .AddTransient<IJobsSettingStorageProvider, SettingsJobsSettingStorageProvider>()
-       .AddTransient<IRecurringJob, AmqpJob>()
-       .AddTransient<IRecurringJob, SoLongJob>()
+       .AddTransient<IRecurringJob, MqttJob>() 
 
 //Autres
        .AddDateTimeService()
@@ -68,13 +64,14 @@ app.UseWebApi(builder.Environment, builder.Configuration,
                   .UseHealthChecksExt(builder.Environment),
               endpoints => endpoints.MapHealthChecksExt())
    .UseSwaggerExt()
-   .UseHangfire(builder.Configuration);
+   .UseHangfire(builder.Configuration)
+   ;
 
 await app
       .AddEndpoints(currentAssembly)
       .RunAsync();
 
-namespace Krosoft.Extensions.Samples.DotNet9.Api
+namespace Krosoft.Extensions.Samples.DotNet10.Api
 {
     public class Program;
 }

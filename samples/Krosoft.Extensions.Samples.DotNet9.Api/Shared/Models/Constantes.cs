@@ -7,5 +7,6 @@ internal static class Constantes
         public const string Default = "default";
         public const string Prio = "prio";
         public const string System = "system";
+        public const string Worker = "worker";
     }
 }
