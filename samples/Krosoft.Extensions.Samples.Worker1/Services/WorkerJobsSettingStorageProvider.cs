@@ -1,6 +1,9 @@
-﻿using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
+﻿using Hangfire;
+using Krosoft.Extensions.Jobs.Hangfire.Extensions;
+using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Samples.Shared.Models;
+using StackExchange.Redis;
 
 namespace Krosoft.Extensions.Samples.Worker1.Services;
 
@@ -37,4 +40,35 @@ internal class WorkerJobsSettingStorageProvider : IJobsSettingStorageProvider
             Type = jobTypeCode.ToString(),
             QueueName = Constants.QueuesKeys.System
         };
+}
+
+
+
+
+
+
+
+public class ExecuteOnceCleanupService : IHostedService
+{
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        var monitoringApi = JobStorage.Current.GetMonitoringApi();
+        var processingJobs = monitoringApi.ProcessingJobs(0, int.MaxValue);
+        
+        using var connection = JobStorage.Current.GetConnection();
+        foreach (var job in processingJobs)
+        {
+            var key = job.Value.Job?.GetFingerprintLockKey();
+            if (key != null)
+            {
+                using var transaction = connection.CreateWriteTransaction();
+                transaction.RemoveHash(key);
+                transaction.Commit();
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

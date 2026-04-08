@@ -1,76 +1,73 @@
-﻿//using System.Security.Cryptography;
-//using System.Text;
-//using Hangfire.Client;
-//using Hangfire.Common;
-//using Hangfire.Server;
+﻿using Hangfire;
+using Hangfire.Client;
+using Hangfire.Common;
+using Hangfire.Server;
+using Hangfire.Storage;
+using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 
-//namespace Krosoft.Extensions.Jobs.Hangfire.Attributes;
+namespace Krosoft.Extensions.Jobs.Hangfire.Attributes;
 
-//public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFilter
-//{
-//    public void OnCreating(CreatingContext filterContext)
-//    {
-//        var entries = filterContext.Connection.GetAllEntriesFromHash(GetJobKey(filterContext.Job));
-//        if (entries != null && entries.ContainsKey("jobId"))
-//        {
-//            filterContext.SetJobParameter("Reason", "This job was already created once, cancel creation.");
-//            filterContext.Canceled = true;
-//        }
-//    }
+public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFilter
+{
+    public void OnCreating(CreatingContext filterContext)
+    {
+        using (filterContext.Connection.AcquireDistributedLock(filterContext.Job.GetFingerprintLockKey(), TimeSpan.FromSeconds(15)))
+        {
+            var entries = filterContext.Connection.GetAllEntriesFromHash(filterContext.Job.GetFingerprintKey());
+            if (entries != null && entries.ContainsKey("jobId"))
+            {
+                filterContext.SetJobParameter("Reason", "Job already queued.");
+                filterContext.Canceled = true;
+                return;
+            }
 
-//    public void OnCreated(CreatedContext filterContext)
-//    {
-//        if (!filterContext.Canceled)
-//        {
-//            // Job created, mark it as such.
-//            filterContext.Connection.SetRangeInHash(GetJobKey(filterContext.Job), [new KeyValuePair<string, string>("jobId", filterContext.BackgroundJob.Id)]);
-//        }
-//    }
+            using var transaction = JobStorage.Current.GetConnection().CreateWriteTransaction();
+            transaction.SetRangeInHash(filterContext.Job.GetFingerprintKey(), [new KeyValuePair<string, string>("jobId", "pending")]);
+            transaction.Commit();
+        }
+    }
 
-//    public void OnPerforming(PerformingContext context)
-//    {
-//        var entries = context.Connection.GetAllEntriesFromHash(GetJobKey(context.BackgroundJob.Job));
-//        if (entries != null && entries.ContainsKey("jobId"))
-//        {
-//            context.SetJobParameter("Reason", "This job was already created once, cancel creation.");
-//            context.Canceled = true;
-//        }
-//    }
+    public void OnCreated(CreatedContext filterContext)
+    {
+    }
 
-//    public void OnPerformed(PerformedContext context)
-//    {
-//        if (!context.Canceled)
-//        {
-//            // Job created, mark it as such.
-//            context.Connection.SetRangeInHash(GetJobKey(context.BackgroundJob.Job), [new KeyValuePair<string, string>("jobId", context.BackgroundJob.Id)]);
-//        }
-//    }
+    public void OnPerforming(PerformingContext context)
+    {
+        Console.WriteLine($"[ExecuteOnce] OnPerforming - Job: {context.BackgroundJob.Id}");
+        Console.WriteLine($"[ExecuteOnce] LockKey: {context.BackgroundJob.Job.GetFingerprintLockKey()}:executing");
 
-//    private static string GetJobKey(Job? job)
-//    {
-//        if (job == null) return string.Empty;
-//        //using var sha512 = SHA512.Create();
-//        //return "execute-once:" + Convert.ToBase64String(sha512.ComputeHash(Encoding.UTF8.GetBytes(job.ToString())));
+        try
+        {
+            var distributedLock = context.Connection.AcquireDistributedLock(
+                                                                            $"{context.BackgroundJob.Job.GetFingerprintLockKey()}:executing",
+                                                                            TimeSpan.FromSeconds(1));
+            Console.WriteLine($"[ExecuteOnce] Lock acquired for job: {context.BackgroundJob.Id}");
+            context.Items["DistributedLock"] = distributedLock;
+        }
+        catch (DistributedLockTimeoutException ex)
+        {
+            Console.WriteLine($"[ExecuteOnce] Lock failed for job: {context.BackgroundJob.Id} - {ex.Message}");
+            context.SetJobParameter("Reason", "Job is already running on another server, execution cancelled.");
+            context.Canceled = true;
+        }
+    }
 
-//        return job.GetFingerprintKey();
-//    }
-//}
+    public void OnPerformed(PerformedContext context)
+    {
+        Console.WriteLine($"[ExecuteOnce] OnPerformed - Job: {context.BackgroundJob.Id}, Canceled: {context.Canceled}");
+    
+        if (context.Items.TryGetValue("DistributedLock", out var lockObj) && lockObj is IDisposable distributedLock)
+        {
+            Console.WriteLine($"[ExecuteOnce] Releasing lock for job: {context.BackgroundJob.Id}");
+            distributedLock.Dispose();
+        }
+        else
+        {
+            Console.WriteLine($"[ExecuteOnce] No lock found in Items for job: {context.BackgroundJob.Id}");
+        }
 
-//internal static class JobExtensions
-//{
-//    //public static bool SkipConcurrentExecution(this Job job)
-//    //    => job.Method.GetCustomAttributes(typeof(SkipConcurrentExecutionAttribute), false).Length > 0;
-
-//    public static string GetFingerprintLockKey(this Job job) => $"{job.GetFingerprintKey()}:lock";
-//    public static string GetFingerprintKey(this Job job) => $"fingerprint:{job.GetFingerprint()}";
-
-//    private static string GetFingerprint(this Job job)
-//    {
-//        if (job.Type == null || job.Method == null) { return string.Empty; }
-//        var parameters = string.Empty;
-
-//        if (job.Args is not null) { parameters = string.Join(".", job.Args); }
-
-//        return $"{job.Type.FullName}.{job.Method.Name}.{parameters}";
-//    }
-//}
+        using var transaction = context.Connection.CreateWriteTransaction();
+        transaction.RemoveHash(context.BackgroundJob.Job.GetFingerprintKey());
+        transaction.Commit();
+    }
+}
