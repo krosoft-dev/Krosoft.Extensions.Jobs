@@ -81,6 +81,9 @@ public static class JobExtensions
         string methodName;
         string parameters;
 
+
+#if NET9_0_OR_GREATER
+
         if (job.Type == typeof(DynamicJob) && job.Args is { Count: > 0 } && job.Args[0] is DynamicJob dynamicJob)
         {
             typeName = dynamicJob.Type ?? string.Empty;
@@ -93,6 +96,14 @@ public static class JobExtensions
             methodName = job.Method.Name;
             parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
         }
+        #else
+           typeName = job.Type.FullName ?? string.Empty;
+            methodName = job.Method.Name;
+            parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
+#endif
+
+
+       
 
         return $"{typeName}.{methodName}.{parameters}";
     }
