@@ -88,7 +88,7 @@ public static class JobExtensions
         {
             typeName = dynamicJob.Type ?? string.Empty;
             methodName = dynamicJob.Method ?? string.Empty;
-            parameters = dynamicJob.Args ?? string.Empty;
+            parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
         }
         else
         {
