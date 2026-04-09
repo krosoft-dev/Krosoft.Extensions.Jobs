@@ -1,34 +1,42 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+using Hangfire;
 using Hangfire.Client;
 using Hangfire.Common;
+using Hangfire.Server;
+using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Attributes;
 
-public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter
+public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFilter
 {
     public void OnCreating(CreatingContext filterContext)
     {
-        var entries = filterContext.Connection.GetAllEntriesFromHash(GetJobKey(filterContext.Job));
-        if (entries != null && entries.ContainsKey("jobId"))
+        var monitoringApi = JobStorage.Current.GetMonitoringApi();
+        var isAlreadyQueued = monitoringApi.IsJobAlreadyQueued(filterContext.Job);
+        var isAlreadyProcessing = monitoringApi.IsJobAlreadyProcessing(filterContext.Job, null);
+
+        if (isAlreadyQueued || isAlreadyProcessing)
         {
-            // This job was already created once, cancel creation.
+            filterContext.SetJobParameter("Reason", isAlreadyProcessing ? "Job already processing." : "Job already queued.");
             filterContext.Canceled = true;
         }
     }
 
     public void OnCreated(CreatedContext filterContext)
     {
-        if (!filterContext.Canceled)
+    }
+
+    public void OnPerforming(PerformingContext context)
+    {
+        var monitoringApi = JobStorage.Current.GetMonitoringApi();
+        var isAlreadyProcessing = monitoringApi.IsJobAlreadyProcessing(context.BackgroundJob.Job, context.BackgroundJob.Id);
+        if (isAlreadyProcessing)
         {
-            // Job created, mark it as such.
-            filterContext.Connection.SetRangeInHash(GetJobKey(filterContext.Job), [new KeyValuePair<string, string>("jobId", filterContext.BackgroundJob.Id)]);
+            context.SetJobParameter("Reason", "Job is already running on another server, execution cancelled.");
+            context.Canceled = true;
         }
     }
 
-    private static string GetJobKey(Job job)
+    public void OnPerformed(PerformedContext context)
     {
-        using var sha512 = SHA512.Create();
-        return "execute-once:" + Convert.ToBase64String(sha512.ComputeHash(Encoding.UTF8.GetBytes(job.ToString())));
     }
 }

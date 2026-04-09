@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileTag>krosoft-extensions.samples.dotnet10.api</DockerfileTag>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2026.4.7.6384" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2026.4.7.6386" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2026.4.7.6385" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.3.17.6132" />
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.4.7.6393" />
+		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2026.3.17.5982" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory\Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.csproj" />
+		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis\Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.csproj" />
+		<ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs.Hangfire\Krosoft.Extensions.Jobs.Hangfire.csproj" />
+		<ProjectReference Include="..\Krosoft.Extensions.Samples.Shared\Krosoft.Extensions.Samples.Shared.csproj" />
+	</ItemGroup>
+</Project>

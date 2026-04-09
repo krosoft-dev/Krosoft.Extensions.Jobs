@@ -1,7 +1,7 @@
 ﻿using Krosoft.Extensions.Core.Models;
 using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 using Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory.Extensions;
-using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
+using Krosoft.Extensions.Samples.Shared.Models;
 using Krosoft.Extensions.Testing.WebApi;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,8 +37,8 @@ public abstract class SampleBaseApiTest<TEntry> : BaseApiTest<TEntry, TEntry> wh
         {
             options.Queues =
             [
-                Constantes.QueuesKeys.Default,
-                Constantes.QueuesKeys.Prio
+                Constants.QueuesKeys.Default,
+                Constants.QueuesKeys.Prio
             ];
             options.WorkerCount = 1;
             // Force InMemory pour les tests.

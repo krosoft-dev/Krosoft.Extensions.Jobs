@@ -22,8 +22,8 @@ public class JobsEndpointTests : SampleBaseApiTest<Program>
         Check.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
         var jobs = await response.Content.ReadAsNewtonsoftJsonAsync<IEnumerable<JobDto>>(CancellationToken.None).ToList();
         Check.That(jobs).IsNotNull();
-        Check.That(jobs).HasSize(4);
-        Check.That(jobs.Select(x => x.Identifiant)).ContainsExactly("System_SoLong", "System_SoLong", "System_SoLong", "CHECK");
+        Check.That(jobs).HasSize(1);
+        Check.That(jobs.Select(x => x.Identifiant)).ContainsExactly(  "CHECK");
     }
 
     [TestMethod]

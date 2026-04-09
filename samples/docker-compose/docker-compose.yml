@@ -1,8 +1,17 @@
 services:
-  krosoft-extensions.redis:  
+  krosoft-extensions.redis:
     container_name: krosoft.redis
     image: redis:8.0.6-alpine3.21
     restart: on-failure
 
   krosoft-extensions.samples.dotnet9.api:
     image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.dotnet9.api:${TAG_VERSION}
+
+  krosoft-extensions.samples.dotnet10.api:
+    image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.dotnet10.api:${TAG_VERSION}
+
+  krosoft-extensions.samples.worker1:
+    image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.worker1:${TAG_VERSION}
+
+  krosoft-extensions.samples.worker2:
+    image: ${DOCKER_REGISTRY-}krosoft-extensions.samples.worker2:${TAG_VERSION}

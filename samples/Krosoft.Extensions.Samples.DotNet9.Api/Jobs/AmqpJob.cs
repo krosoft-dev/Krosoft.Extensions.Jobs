@@ -3,6 +3,7 @@ using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
+using Krosoft.Extensions.Samples.Shared.Models;
 using Microsoft.Extensions.Options;
 
 namespace Krosoft.Extensions.Samples.DotNet9.Api.Jobs;

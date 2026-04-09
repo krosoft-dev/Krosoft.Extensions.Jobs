@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using System.Reflection;
+using Hangfire;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
@@ -21,6 +22,11 @@ public static class ServiceCollectionExtensions
         var options = new KrosoftBackgroundJobServerOptions();
         action(options);
 
+        var appName = Assembly.GetEntryAssembly()?.GetName().Name;
+        var machineName = Environment.MachineName;
+
+        options.ServerName = $"{appName}_{machineName}";
+
         // Validation du provider de stockage
         if (options.StorageProvider == null)
         {
@@ -28,7 +34,13 @@ public static class ServiceCollectionExtensions
         }
 
         // Configuration Hangfire avec le provider de stockage
-        services.AddHangfire(config => { options.StorageProvider.ConfigureStorage(config); });
+        services.AddHangfire(config =>
+        {
+            options.StorageProvider.ConfigureStorage(config);
+#if NET9_0_OR_GREATER
+            config.UseDynamicJobs();
+#endif
+        });
 
         // Ajout du serveur Hangfire
         services.AddSingleton<BackgroundJobServerOptions>(options);

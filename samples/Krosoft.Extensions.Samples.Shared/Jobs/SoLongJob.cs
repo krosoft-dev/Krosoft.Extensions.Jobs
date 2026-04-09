@@ -3,12 +3,13 @@ using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Attributes;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
-using Krosoft.Extensions.Samples.DotNet9.Api.Shared.Models;
+using Krosoft.Extensions.Samples.Shared.Models;
+using Microsoft.Extensions.Logging;
 
-namespace Krosoft.Extensions.Samples.DotNet9.Api.Jobs;
+namespace Krosoft.Extensions.Samples.Shared.Jobs;
 
 [ExecuteOnce]
-internal class SoLongJob : IRecurringJob
+public class SoLongJob : IRecurringJob
 {
     private readonly ILogger<SoLongJob> _logger;
 

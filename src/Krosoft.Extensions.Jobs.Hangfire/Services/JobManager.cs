@@ -70,14 +70,14 @@ public class JobManager : IJobManager
             if (recurringJob != null)
             {
 #if NET9_0_OR_GREATER
-                _recurringJobManager.AddOrUpdate(jobSetting.Identifiant,
-                                                 jobSetting.QueueName,
-                                                 () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
-                                                 jobSetting.CronExpression,
-                                                 new RecurringJobOptions
-                                                 {
-                                                     TimeZone = TimeZoneInfo.Local
-                                                 });
+                _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
+                                                        jobSetting.QueueName,
+                                                        () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
+                                                        jobSetting.CronExpression,
+                                                        new DynamicRecurringJobOptions
+                                                        {
+                                                            TimeZone = TimeZoneInfo.Local
+                                                        });
 #else
                 _recurringJobManager.AddOrUpdate(jobSetting.Identifiant,
                                                  () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),

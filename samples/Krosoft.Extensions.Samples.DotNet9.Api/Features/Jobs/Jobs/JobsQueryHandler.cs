@@ -29,22 +29,26 @@ public class JobsQueryHandler : IRequestHandler<JobsQuery, IEnumerable<JobDto>>
     {
         _logger.LogInformation("Récupération des jobs...");
 
+        var recurringJobs = await _jobManager.GetRecurringJobsAsync(cancellationToken)!.ToList();
+        var jobsSettings = await _jobsSettingStorageProvider.GetAsync(cancellationToken)!.ToDictionary(x => x.Identifiant!, true);
+
         var jobsDto = new List<JobDto>();
 
-        var recurringJobs = await _jobManager.GetRecurringJobsAsync(cancellationToken)!.ToDictionary(x => x.Identifiant!, true);
-
-        var jobsSettings = await _jobsSettingStorageProvider.GetAsync(cancellationToken)!.ToList();
-        if (jobsSettings.Any())
+        foreach (var recurringJob in recurringJobs)
         {
-            foreach (var jobAutomatique in jobsSettings)
+            var jobDto = _mapper.Map<JobDto>(recurringJob);
+
+            var jobSetting = jobsSettings!.GetValueOrDefault(recurringJob.Identifiant);
+            if (jobSetting != null)
             {
-                var jobDto = _mapper.Map<JobDto>(jobAutomatique);
-
-                var job = recurringJobs!.GetValueOrDefault(jobDto.Identifiant);
-                _mapper.MapIfExist(job, jobDto);
-
-                jobsDto.Add(jobDto);
+                _mapper.MapIfExist(jobSetting, jobDto);
             }
+            else
+            {
+                jobDto.IsRemote = true;
+            }
+
+            jobsDto.Add(jobDto);
         }
 
         _logger.LogInformation($"Récupération de {jobsDto.Count} jobs.");
