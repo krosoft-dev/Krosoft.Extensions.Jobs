@@ -2,6 +2,7 @@
 using Hangfire;
 using Hangfire.Common;
 using Krosoft.Extensions.Core.Models.Exceptions;
+using Krosoft.Extensions.Jobs.Hangfire.Attributes;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Jobs.Hangfire.Services;
@@ -38,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddHangfire(config =>
         {
             options.StorageProvider.ConfigureStorage(config);
+            config.UseFilter(new ExecuteOnceStateFilter());
 #if NET9_0_OR_GREATER
             config.UseDynamicJobs();
 #endif

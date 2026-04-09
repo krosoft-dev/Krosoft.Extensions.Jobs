@@ -12,7 +12,7 @@ namespace Krosoft.Extensions.Samples.Shared.Jobs;
 
 
 //[DisableConcurrentExecution(timeoutInSeconds: 1)]
-
+[ExecuteOnce]
 public class SoLongJob : IRecurringJob
 {
     private readonly ILogger<SoLongJob> _logger;
@@ -24,7 +24,7 @@ public class SoLongJob : IRecurringJob
 
     public string Type => nameof(JobTypeCode.SoLong);
 
-    [ExecuteOnce]
+ 
     public async Task<JobResult> ExecuteAsync(string identifiant)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);

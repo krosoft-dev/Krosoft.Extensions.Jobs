@@ -2,12 +2,13 @@
 using Hangfire.Client;
 using Hangfire.Common;
 using Hangfire.Server;
+using Hangfire.States;
 using Hangfire.Storage;
 using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Attributes;
 
-public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFilter
+public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFilter, IApplyStateFilter
 {
     public void OnCreating(CreatingContext filterContext)
     {
@@ -69,5 +70,17 @@ public class ExecuteOnceAttribute : JobFilterAttribute, IClientFilter, IServerFi
         using var transaction = context.Connection.CreateWriteTransaction();
         transaction.RemoveHash(context.BackgroundJob.Job.GetFingerprintKey());
         transaction.Commit();
+    }
+
+    public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+    {
+        if (context.NewState is DeletedState)
+        {
+            transaction.RemoveHash(context.BackgroundJob.Job.GetFingerprintKey());
+        }
+    }
+
+    public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+    {
     }
 }
