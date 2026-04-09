@@ -15,6 +15,7 @@ public class HangfireProfile : Profile
             .ForMember(dest => dest.ProchaineExecutionDate, o => o.MapFrom(src => src.NextExecution))
             .ForMember(dest => dest.DerniereExecutionStatut, o => o.MapFrom(src => src.LastJobState))
             .ForMember(dest => dest.DerniereExecutionDate, o => o.MapFrom(src => src.LastExecution))
+            .ForMember(dest => dest.QueueName, o => o.MapFrom(src => src.Queue))
             .ForMember(dest => dest.CreationDate, o => o.MapFrom(src => src.CreatedAt))
             .ForAllOtherMembers(m => m.Ignore());
     }

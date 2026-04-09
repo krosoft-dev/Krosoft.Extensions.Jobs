@@ -6,6 +6,8 @@ public record CronJob
 
     public string? CronExpression { get; set; }
 
+    public string? QueueName { get; set; }
+
     public DateTime? ProchaineExecutionDate { get; set; }
 
     public string? DerniereExecutionStatut { get; set; }

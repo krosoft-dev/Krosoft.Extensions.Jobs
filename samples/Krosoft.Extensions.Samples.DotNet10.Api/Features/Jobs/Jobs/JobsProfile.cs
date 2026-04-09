@@ -11,11 +11,14 @@ public class JobsProfile : Profile
         CreateMap<IJobAutomatiqueSetting, JobDto>()
             .ForMember(dest => dest.Identifiant, o => o.MapFrom(src => src.Identifiant))
             .ForMember(dest => dest.CronExpression, o => o.MapFrom(src => src.CronExpression))
+            .ForMember(dest => dest.QueueName, o => o.MapFrom(src => src.QueueName))
             .ForMember(dest => dest.TypeCode, o => o.MapFrom(src => src.Type))
             .ForAllOtherMembers(m => m.Ignore());
 
         CreateMap<CronJob, JobDto>()
             .ForMember(dest => dest.Identifiant, o => o.MapFrom(src => src.Identifiant))
+            .ForMember(dest => dest.CronExpression, o => o.MapFrom(src => src.CronExpression))
+            .ForMember(dest => dest.QueueName, o => o.MapFrom(src => src.QueueName))
             .ForMember(dest => dest.ProchaineExecutionDate, o => o.MapFrom(src => src.ProchaineExecutionDate))
             .ForMember(dest => dest.DerniereExecutionDate, o => o.MapFrom(src => src.DerniereExecutionDate))
             .ForMember(dest => dest.DerniereExecutionStatut, o => o.MapFrom(src => src.DerniereExecutionStatut))
