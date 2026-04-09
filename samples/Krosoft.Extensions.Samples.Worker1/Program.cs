@@ -32,7 +32,7 @@ builder.Services
            options.WorkerCount = 1;
            options.UseRedisStorage("krosoft.redis:6379,password=EI0hKU2OBfPHNPfd");
        })
-       .AddTransient<IJobsSettingStorageProvider, WorkerJobsSettingStorageProvider>().AddHostedService<ExecuteOnceCleanupService>()
+       .AddTransient<IJobsSettingStorageProvider, WorkerJobsSettingStorageProvider>()
        .AddTransient<IRecurringJob, Worker1Job>()
        .AddTransient<IRecurringJob, SharedJob>()
        .AddTransient<IRecurringJob, SoLongJob>()

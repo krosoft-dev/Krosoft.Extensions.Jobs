@@ -4,5 +4,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krosoft.Extensions.Testing" Version="2026.4.7.6419" />
+    <PackageReference Include="Hangfire.DynamicJobs" Version="0.3.0" />
   </ItemGroup>
 </Project>

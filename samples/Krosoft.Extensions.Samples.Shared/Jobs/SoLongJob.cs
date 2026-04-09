@@ -1,17 +1,13 @@
 ﻿using System.Diagnostics;
-using Hangfire;
 using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Attributes;
-//using Krosoft.Extensions.Jobs.Hangfire.Attributes;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Samples.Shared.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Krosoft.Extensions.Samples.Shared.Jobs;
 
-
-//[DisableConcurrentExecution(timeoutInSeconds: 1)]
 [ExecuteOnce]
 public class SoLongJob : IRecurringJob
 {
@@ -24,7 +20,6 @@ public class SoLongJob : IRecurringJob
 
     public string Type => nameof(JobTypeCode.SoLong);
 
- 
     public async Task<JobResult> ExecuteAsync(string identifiant)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);
@@ -58,5 +53,3 @@ public class SoLongJob : IRecurringJob
         await Task.Delay(TimeSpan.FromMinutes(7), cancellationToken);
     }
 }
-
-
