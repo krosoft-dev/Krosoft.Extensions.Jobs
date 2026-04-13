@@ -9,19 +9,19 @@ namespace Krosoft.Extensions.Samples.DotNet9.Api.Features.Jobs.Jobs;
 public class JobsQueryHandler : IRequestHandler<JobsQuery, IEnumerable<JobDto>>
 {
     private readonly IJobManager _jobManager;
-    private readonly IJobsSettingStorageProvider _jobsSettingStorageProvider;
+    private readonly IJobSettingStore _jobSettingStore;
     private readonly ILogger<JobsQueryHandler> _logger;
     private readonly IMapper _mapper;
 
     public JobsQueryHandler(ILogger<JobsQueryHandler> logger,
                             IMapper mapper,
                             IJobManager jobManager,
-                            IJobsSettingStorageProvider jobsSettingStorageProvider)
+                            IJobSettingStore jobSettingStore)
     {
         _logger = logger;
         _mapper = mapper;
         _jobManager = jobManager;
-        _jobsSettingStorageProvider = jobsSettingStorageProvider;
+        _jobSettingStore = jobSettingStore;
     }
 
     public async Task<IEnumerable<JobDto>> Handle(JobsQuery request,
@@ -30,7 +30,7 @@ public class JobsQueryHandler : IRequestHandler<JobsQuery, IEnumerable<JobDto>>
         _logger.LogInformation("Récupération des jobs...");
 
         var recurringJobs = await _jobManager.GetRecurringJobsAsync(cancellationToken)!.ToList();
-        var jobsSettings = await _jobsSettingStorageProvider.GetAsync(cancellationToken)!.ToDictionary(x => x.Identifiant!, true);
+        var jobsSettings = await _jobSettingStore.GetAllAsync(cancellationToken)!.ToDictionary(x => x.Identifiant!, true);
 
         var jobsDto = new List<JobDto>();
 
@@ -42,10 +42,6 @@ public class JobsQueryHandler : IRequestHandler<JobsQuery, IEnumerable<JobDto>>
             if (jobSetting != null)
             {
                 _mapper.MapIfExist(jobSetting, jobDto);
-            }
-            else
-            {
-                jobDto.IsRemote = true;
             }
 
             jobsDto.Add(jobDto);
