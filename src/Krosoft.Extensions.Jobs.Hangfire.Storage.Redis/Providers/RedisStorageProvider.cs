@@ -1,9 +1,9 @@
-using Hangfire;
 #if NET9_0_OR_GREATER
 using Hangfire.Redis.StackExchange;
 #else
 using Hangfire.Redis;
 #endif
+using Hangfire;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
@@ -20,18 +20,18 @@ public class RedisStorageProvider : IHangfireStorageProvider
 {
     private const string DefaultPrefix = "hangfire:";
 
-    private readonly Lazy<IConnectionMultiplexer>? _connection;
+    private readonly Lazy<ConnectionMultiplexer>? _connection;
     private readonly RedisStorageOptions? _options;
 
     public RedisStorageProvider(string? connectionString, RedisStorageOptions? options = null)
     {
         Guard.IsNotNullOrWhiteSpace(nameof(connectionString), connectionString);
 
-        _connection = new Lazy<IConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString!));
+        _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString!));
         _options = options;
     }
 
-    private IConnectionMultiplexer Connection
+    private ConnectionMultiplexer Connection
     {
         get
         {
@@ -60,5 +60,3 @@ public class RedisStorageProvider : IHangfireStorageProvider
         services.AddSingleton<IJobSettingStore>(_ => new RedisJobSettingStore(Connection, Prefix));
     }
 }
-
-
