@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using Hangfire.Common;
+﻿using Hangfire.Common;
+
 #if NET9_0_OR_GREATER
 using Hangfire;
-
+using System.Text.Json;
 #else
 #endif
 
@@ -38,9 +38,9 @@ public static class JobExtensions
         else
         {
 #endif
-            typeName = job.Type.FullName ?? string.Empty;
-            methodName = job.Method.Name;
-            parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
+        typeName = job.Type.FullName ?? string.Empty;
+        methodName = job.Method.Name;
+        parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
 #if NET9_0_OR_GREATER
         }
 #endif

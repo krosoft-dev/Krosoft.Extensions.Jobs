@@ -23,7 +23,7 @@ public class JobsEndpointTests : SampleBaseApiTest<Program>
         var jobs = await response.Content.ReadAsNewtonsoftJsonAsync<IEnumerable<JobDto>>(CancellationToken.None).ToList();
         Check.That(jobs).IsNotNull();
         Check.That(jobs).HasSize(1);
-        Check.That(jobs.Select(x => x.Identifiant)).ContainsExactly(  "CHECK");
+        Check.That(jobs.Select(x => x.Identifiant)).ContainsExactly("CHECK");
     }
 
     [TestMethod]

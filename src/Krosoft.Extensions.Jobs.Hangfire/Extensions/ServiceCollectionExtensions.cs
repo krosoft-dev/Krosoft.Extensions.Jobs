@@ -11,11 +11,11 @@ namespace Krosoft.Extensions.Jobs.Hangfire.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Ajoute Hangfire avec configuration étendue
+    /// Ajoute Hangfire avec configuration étendue.
     /// </summary>
-    /// <param name="services">Collection de services</param>
-    /// <param name="action">Configuration des options</param>
-    /// <returns>Collection de services pour chaînage</returns>
+    /// <param name="services">Collection de services.</param>
+    /// <param name="action">Configuration des options.</param>
+    /// <returns>Collection de services pour chaînage.</returns>
     public static IServiceCollection AddHangfireExt(this IServiceCollection services,
                                                     Action<KrosoftBackgroundJobServerOptions> action)
     {
@@ -41,6 +41,9 @@ public static class ServiceCollectionExtensions
             config.UseDynamicJobs();
 #endif
         });
+
+        // Services complémentaires alignés sur le provider de stockage (ex: IJobSettingStore)
+        options.StorageProvider.RegisterServices(services);
 
         // Ajout du serveur Hangfire
         services.AddSingleton<BackgroundJobServerOptions>(options);

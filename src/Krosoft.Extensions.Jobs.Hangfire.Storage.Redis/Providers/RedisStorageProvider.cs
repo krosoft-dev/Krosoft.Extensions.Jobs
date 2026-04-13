@@ -1,9 +1,14 @@
-﻿#if NET9_0_OR_GREATER
-using Hangfire;
+#if NET9_0_OR_GREATER
 using Hangfire.Redis.StackExchange;
+#else
+using Hangfire.Redis;
+#endif
+using Hangfire;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
+using Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Stores;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Providers;
@@ -13,18 +18,20 @@ namespace Krosoft.Extensions.Jobs.Hangfire.Storage.Redis.Providers;
 /// </summary>
 public class RedisStorageProvider : IHangfireStorageProvider
 {
-    private readonly Lazy<IConnectionMultiplexer>? _connection;
+    private const string DefaultPrefix = "hangfire:";
+
+    private readonly Lazy<ConnectionMultiplexer>? _connection;
     private readonly RedisStorageOptions? _options;
 
     public RedisStorageProvider(string? connectionString, RedisStorageOptions? options = null)
     {
         Guard.IsNotNullOrWhiteSpace(nameof(connectionString), connectionString);
 
-        _connection = new Lazy<IConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString!));
+        _connection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(connectionString!));
         _options = options;
     }
 
-    private IConnectionMultiplexer Connection
+    private ConnectionMultiplexer Connection
     {
         get
         {
@@ -37,14 +44,19 @@ public class RedisStorageProvider : IHangfireStorageProvider
         }
     }
 
+    private string Prefix => _options?.Prefix ?? DefaultPrefix;
+
     public void ConfigureStorage(IGlobalConfiguration configuration)
     {
         configuration.UseRedisStorage(Connection, _options ??
                                                   new RedisStorageOptions
                                                   {
-                                                      Prefix = "hangfire:"
+                                                      Prefix = DefaultPrefix
                                                   });
     }
-}
 
-#endif
+    public void RegisterServices(IServiceCollection services)
+    {
+        services.AddSingleton<IJobSettingStore>(_ => new RedisJobSettingStore(Connection, Prefix));
+    }
+}

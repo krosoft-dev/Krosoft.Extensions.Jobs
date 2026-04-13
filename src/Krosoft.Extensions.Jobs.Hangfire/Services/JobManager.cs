@@ -14,6 +14,7 @@ public class JobManager : IJobManager
 {
     private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IEnumerable<IJob> _jobs;
+    private readonly IJobSettingStore _jobSettingStore;
     private readonly IJobsSettingStorageProvider _jobsSettingStorageProvider;
     private readonly JobStorage _jobStorage;
     private readonly ILogger<JobManager> _logger;
@@ -29,6 +30,7 @@ public class JobManager : IJobManager
                       JobStorage jobStorage,
                       IMapper mapper,
                       IJobsSettingStorageProvider jobsSettingStorageProvider,
+                      IJobSettingStore jobSettingStore,
                       IBackgroundJobClient backgroundJobClient)
     {
         _recurringJobManager = recurringJobManager;
@@ -38,6 +40,7 @@ public class JobManager : IJobManager
         _jobStorage = jobStorage;
         _mapper = mapper;
         _jobsSettingStorageProvider = jobsSettingStorageProvider;
+        _jobSettingStore = jobSettingStore;
         _backgroundJobClient = backgroundJobClient;
         _monitoringApi = JobStorage.Current.GetMonitoringApi();
     }
@@ -83,6 +86,8 @@ public class JobManager : IJobManager
                                                  () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
                                                  jobSetting.CronExpression, queue: jobSetting.QueueName);
 #endif
+
+                await _jobSettingStore.SaveAsync(jobSetting, cancellationToken);
 
                 _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}'.");
             }
