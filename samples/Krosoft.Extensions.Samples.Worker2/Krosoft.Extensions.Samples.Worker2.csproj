@@ -5,11 +5,11 @@
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 	<ItemGroup> 
-		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.3.17.6132" />
-		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.4.2.6328" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.4.17.6678" />
+		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.4.16.6624" />
 		<PackageReference Include="Krosoft.Extensions.Validations" Version="2026.4.9.6491" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.4.9.6483" />
-		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.4.7.6391" />
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.4.17.6687" />
+		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.4.17.6685" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" /> 
 	</ItemGroup>
 	<ItemGroup>

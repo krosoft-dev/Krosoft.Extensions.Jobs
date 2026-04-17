@@ -3,9 +3,9 @@
 		<ProjectReference Include="..\..\samples\Krosoft.Extensions.Samples.DotNet9.Api\Krosoft.Extensions.Samples.DotNet9.Api.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Krosoft.Extensions.Testing.WebApi" Version="2026.4.9.6499" />
+		<PackageReference Include="Krosoft.Extensions.Testing.WebApi" Version="2026.4.17.6669" />
 		<PackageReference Include="Krosoft.Extensions.Testing.Cqrs" Version="2026.4.13.6530" />
-		<PackageReference Include="Krosoft.Extensions.Testing" Version="2026.4.13.6530" />
+		<PackageReference Include="Krosoft.Extensions.Testing" Version="2026.4.17.6670" />
 		<PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
 	</ItemGroup>
 </Project>
