@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Krosoft.Extensions.Core" Version="2026.4.16.6624" />
+    <PackageReference Include="Krosoft.Extensions.Core" Version="2026.4.22.6900" />
   </ItemGroup>
 
   <ItemGroup>
