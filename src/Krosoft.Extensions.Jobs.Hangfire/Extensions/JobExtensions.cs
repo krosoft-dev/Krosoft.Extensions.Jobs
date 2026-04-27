@@ -1,9 +1,7 @@
-﻿using Hangfire.Common;
-
+using Hangfire.Common;
 #if NET9_0_OR_GREATER
 using Hangfire;
 using System.Text.Json;
-#else
 #endif
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Extensions;
@@ -19,36 +17,36 @@ public static class JobExtensions
             return string.Empty;
         }
 
-        string typeName;
-        string methodName;
-        string parameters;
-
 #if NET9_0_OR_GREATER
         if (job.Type == typeof(DynamicJob) && job.Args is { Count: > 0 } && job.Args[0] is DynamicJob dynamicJob)
         {
-            // Résoudre le vrai type depuis le nom string
-            var resolvedType = Type.GetType(dynamicJob.Type ?? string.Empty);
-            typeName = resolvedType?.FullName ?? dynamicJob.Type ?? string.Empty;
-            methodName = dynamicJob.Method ?? string.Empty;
+            return GetDynamicJobFingerprint(dynamicJob);
+        }
+#endif
 
-            // Les args du DynamicJob sont stockés en JSON : ["\"System_SoLong\""]
-            // → désérialiser pour obtenir les valeurs brutes
-            parameters = DeserializeDynamicJobArgs(dynamicJob.Args);
-        }
-        else
-        {
-#endif
-        typeName = job.Type.FullName ?? string.Empty;
-        methodName = job.Method.Name;
-        parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
-#if NET9_0_OR_GREATER
-        }
-#endif
+        return GetStandardJobFingerprint(job);
+    }
+
+    private static string GetStandardJobFingerprint(Job job)
+    {
+        var typeName = job.Type.FullName ?? string.Empty;
+        var methodName = job.Method.Name;
+        var parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
 
         return $"{typeName}.{methodName}.{parameters}";
     }
 
 #if NET9_0_OR_GREATER
+    private static string GetDynamicJobFingerprint(DynamicJob dynamicJob)
+    {
+        var resolvedType = Type.GetType(dynamicJob.Type ?? string.Empty);
+        var typeName = resolvedType?.FullName ?? dynamicJob.Type ?? string.Empty;
+        var methodName = dynamicJob.Method ?? string.Empty;
+        var parameters = DeserializeDynamicJobArgs(dynamicJob.Args);
+
+        return $"{typeName}.{methodName}.{parameters}";
+    }
+
     private static string DeserializeDynamicJobArgs(string? args)
     {
         if (string.IsNullOrEmpty(args))
