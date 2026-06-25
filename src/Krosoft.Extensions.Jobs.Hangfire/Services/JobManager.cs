@@ -72,7 +72,6 @@ public class JobManager : IJobManager
             var recurringJob = _recurringjobs.FirstOrDefault(x => x.Type == jobSetting.Type);
             if (recurringJob != null)
             {
-#if NET9_0_OR_GREATER
                 _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
                                                         jobSetting.QueueName,
                                                         () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
@@ -81,11 +80,6 @@ public class JobManager : IJobManager
                                                         {
                                                             TimeZone = TimeZoneInfo.Local
                                                         });
-#else
-                _recurringJobManager.AddOrUpdate(jobSetting.Identifiant,
-                                                 () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
-                                                 jobSetting.CronExpression, queue: jobSetting.QueueName);
-#endif
 
                 await _jobSettingStore.SaveAsync(jobSetting, cancellationToken);
 

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -8,12 +8,12 @@
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2026.6.20.7709" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2026.6.20.7711" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2026.6.20.7710" />
-		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.4.22.6764" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.6.25.7801" />
-		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2026.5.18.7325" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2026.6.25.7818" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2026.6.25.7820" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2026.6.25.7819" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.6.25.7816" />
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.6.25.7860" />
+		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2026.6.25.7859" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
 	</ItemGroup>
 	<ItemGroup>

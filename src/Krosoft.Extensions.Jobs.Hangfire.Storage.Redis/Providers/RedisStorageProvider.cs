@@ -1,9 +1,5 @@
-#if NET9_0_OR_GREATER
-using Hangfire.Redis.StackExchange;
-#else
-using Hangfire.Redis;
-#endif
 using Hangfire;
+using Hangfire.Redis.StackExchange;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Core.Tools;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
