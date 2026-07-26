@@ -21,11 +21,11 @@ internal class AmqpJob : IRecurringJob
 
     public string Type => nameof(JobTypeCode.Amqp);
 
-    public async Task<JobResult> ExecuteAsync(string identifiant)
+    public async Task<JobResult> ExecuteAsync(string identifiant,
+                                              CancellationToken cancellationToken)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);
 
-        var cancellationToken = CancellationToken.None;
         var sw = Stopwatch.StartNew();
 
         _logger.LogInformation($"Exécution du job '{identifiant}'...");

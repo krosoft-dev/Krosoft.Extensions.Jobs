@@ -31,7 +31,13 @@ public static class JobExtensions
     {
         var typeName = job.Type.FullName ?? string.Empty;
         var methodName = job.Method.Name;
-        var parameters = job.Args is not null ? string.Join(".", job.Args) : string.Empty;
+
+        // Le token d'annulation ne fait pas partie de l'identité d'un job : Hangfire
+        // le substitue à l'exécution, donc l'inclure ferait diverger l'empreinte entre
+        // un job en file et le même job en cours, et casserait la déduplication.
+        var parameters = job.Args is not null
+            ? string.Join(".", job.Args.Where(a => a is not CancellationToken))
+            : string.Empty;
 
         return $"{typeName}.{methodName}.{parameters}";
     }

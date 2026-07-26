@@ -17,11 +17,11 @@ internal class Worker1Job : IRecurringJob
 
     public string Type => nameof(JobTypeCode.Worker1);
 
-    public async Task<JobResult> ExecuteAsync(string identifiant)
+    public async Task<JobResult> ExecuteAsync(string identifiant,
+                                              CancellationToken cancellationToken)
     {
         Guard.IsNotNull(nameof(identifiant), identifiant);
 
-        var cancellationToken = CancellationToken.None;
         var sw = Stopwatch.StartNew();
 
         _logger.LogInformation($"Exécution du job Worker1 '{identifiant}'...");

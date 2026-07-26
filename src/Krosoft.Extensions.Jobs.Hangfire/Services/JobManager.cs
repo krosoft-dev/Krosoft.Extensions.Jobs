@@ -53,7 +53,12 @@ public class JobManager : IJobManager
         if (job != null)
         {
             _logger.LogInformation($"Ajout du job {jobContext.Cle} en file...");
-            _backgroundJobClient.Create(() => job.ExecuteAsync(jobContext, cancellationToken), new EnqueuedState(jobContext.QueueName));
+
+            // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire le
+            // remplace à l'exécution par un token lié à l'arrêt du serveur et à l'abandon
+            // du job. Passer le token de l'appelant ici serait trompeur, il n'a aucun
+            // effet sur le job une fois celui-ci en file.
+            _backgroundJobClient.Create(() => job.ExecuteAsync(jobContext, CancellationToken.None), new EnqueuedState(jobContext.QueueName));
         }
         else
         {
@@ -72,9 +77,12 @@ public class JobManager : IJobManager
             var recurringJob = _recurringjobs.FirstOrDefault(x => x.Type == jobSetting.Type);
             if (recurringJob != null)
             {
+                // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire
+                // le remplace à l'exécution par un token lié à l'arrêt du serveur et à
+                // l'abandon du job.
                 _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
                                                         jobSetting.QueueName,
-                                                        () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
+                                                        () => recurringJob.ExecuteAsync(jobSetting.Identifiant!, CancellationToken.None),
                                                         jobSetting.CronExpression,
                                                         new DynamicRecurringJobOptions
                                                         {
