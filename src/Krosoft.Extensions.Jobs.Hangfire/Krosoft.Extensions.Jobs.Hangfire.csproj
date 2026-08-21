@@ -14,6 +14,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.8.21.9466" />
-		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.8.18.9222" />
+		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.8.21.9531" />
 	</ItemGroup>
 </Project>
