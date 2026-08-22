@@ -99,6 +99,8 @@ public class JobManager : IJobManager
             }
         }
 
+        await RemoveOrphelinsAsync(jobsSetting, cancellationToken);
+
         _logger.LogInformation($"{jobsSetting.Count()} recurring jobs configurés.");
     }
 
@@ -209,6 +211,37 @@ public class JobManager : IJobManager
                 Heartbeat = s.Heartbeat
             })
         });
+    }
+
+    private async Task RemoveOrphelinsAsync(IEnumerable<IJobAutomatiqueSetting> jobsSetting,
+                                            CancellationToken cancellationToken)
+    {
+        var types = _recurringjobs.Select(x => x.Type)
+                                  .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var identifiants = jobsSetting.Where(x => !string.IsNullOrWhiteSpace(x.Identifiant))
+                                      .Select(x => x.Identifiant!)
+                                      .ToHashSet(StringComparer.Ordinal);
+
+        var storedSettings = await _jobSettingStore.GetAllAsync(cancellationToken);
+
+        var orphelins = storedSettings.Where(x => !string.IsNullOrWhiteSpace(x.Identifiant))
+                                      .Where(x => !string.IsNullOrWhiteSpace(x.Type) && types.Contains(x.Type!))
+                                      .Where(x => !identifiants.Contains(x.Identifiant!))
+                                      .ToList();
+
+        foreach (var orphelin in orphelins)
+        {
+            _recurringJobManager.RemoveIfExists(orphelin.Identifiant);
+            await _jobSettingStore.RemoveAsync(orphelin.Identifiant!, cancellationToken);
+
+            _logger.LogInformation($"Suppression du recurring job orphelin '{orphelin.Identifiant}' de type '{orphelin.Type}'.");
+        }
+
+        if (orphelins.Count > 0)
+        {
+            _logger.LogInformation($"{orphelins.Count} recurring jobs orphelins supprimés.");
+        }
     }
 
     private IEnumerable<CronJob> MapRecurringJobs(IEnumerable<RecurringJobDto> recurringJobs)
