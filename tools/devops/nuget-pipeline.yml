@@ -15,11 +15,14 @@ trigger:
       - main
   paths:
     include:
-      - "**/Krosoft.Extensions.Jobs/*"
+      - src
+      - Directory.Build.props
 
 extends:
   template: tools/devops/templates/pipelines/nuget-template.yml@Krosoft.Extensions
   parameters:
     packages:
-     - "Krosoft.Extensions.Jobs"
-
+      - "Krosoft.Extensions.Jobs"
+      - "Krosoft.Extensions.Jobs.Hangfire"
+      - "Krosoft.Extensions.Jobs.Hangfire.Storage.InMemory"
+      - "Krosoft.Extensions.Jobs.Hangfire.Storage.Redis"

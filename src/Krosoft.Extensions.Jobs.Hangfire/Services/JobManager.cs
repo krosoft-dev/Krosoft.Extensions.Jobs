@@ -53,7 +53,12 @@ public class JobManager : IJobManager
         if (job != null)
         {
             _logger.LogInformation($"Ajout du job {jobContext.Cle} en file...");
-            _backgroundJobClient.Create(() => job.ExecuteAsync(jobContext, cancellationToken), new EnqueuedState(jobContext.QueueName));
+
+            // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire le
+            // remplace à l'exécution par un token lié à l'arrêt du serveur et à l'abandon
+            // du job. Passer le token de l'appelant ici serait trompeur, il n'a aucun
+            // effet sur le job une fois celui-ci en file.
+            _backgroundJobClient.Create(() => job.ExecuteAsync(jobContext, CancellationToken.None), new EnqueuedState(jobContext.QueueName));
         }
         else
         {
@@ -72,9 +77,12 @@ public class JobManager : IJobManager
             var recurringJob = _recurringjobs.FirstOrDefault(x => x.Type == jobSetting.Type);
             if (recurringJob != null)
             {
+                // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire
+                // le remplace à l'exécution par un token lié à l'arrêt du serveur et à
+                // l'abandon du job.
                 _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
                                                         jobSetting.QueueName,
-                                                        () => recurringJob.ExecuteAsync(jobSetting.Identifiant!),
+                                                        () => recurringJob.ExecuteAsync(jobSetting.Identifiant!, CancellationToken.None),
                                                         jobSetting.CronExpression,
                                                         new DynamicRecurringJobOptions
                                                         {
@@ -90,6 +98,8 @@ public class JobManager : IJobManager
                 throw new KrosoftTechnicalException($"RecurringJob introuvable pour le type {jobSetting.Type}");
             }
         }
+
+        await RemoveOrphelinsAsync(jobsSetting, cancellationToken);
 
         _logger.LogInformation($"{jobsSetting.Count()} recurring jobs configurés.");
     }
@@ -201,6 +211,37 @@ public class JobManager : IJobManager
                 Heartbeat = s.Heartbeat
             })
         });
+    }
+
+    private async Task RemoveOrphelinsAsync(IEnumerable<IJobAutomatiqueSetting> jobsSetting,
+                                            CancellationToken cancellationToken)
+    {
+        var types = _recurringjobs.Select(x => x.Type)
+                                  .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var identifiants = jobsSetting.Where(x => !string.IsNullOrWhiteSpace(x.Identifiant))
+                                      .Select(x => x.Identifiant!)
+                                      .ToHashSet(StringComparer.Ordinal);
+
+        var storedSettings = await _jobSettingStore.GetAllAsync(cancellationToken);
+
+        var orphelins = storedSettings.Where(x => !string.IsNullOrWhiteSpace(x.Identifiant))
+                                      .Where(x => !string.IsNullOrWhiteSpace(x.Type) && types.Contains(x.Type!))
+                                      .Where(x => !identifiants.Contains(x.Identifiant!))
+                                      .ToList();
+
+        foreach (var orphelin in orphelins)
+        {
+            _recurringJobManager.RemoveIfExists(orphelin.Identifiant);
+            await _jobSettingStore.RemoveAsync(orphelin.Identifiant!, cancellationToken);
+
+            _logger.LogInformation($"Suppression du recurring job orphelin '{orphelin.Identifiant}' de type '{orphelin.Type}'.");
+        }
+
+        if (orphelins.Count > 0)
+        {
+            _logger.LogInformation($"{orphelins.Count} recurring jobs orphelins supprimés.");
+        }
     }
 
     private IEnumerable<CronJob> MapRecurringJobs(IEnumerable<RecurringJobDto> recurringJobs)

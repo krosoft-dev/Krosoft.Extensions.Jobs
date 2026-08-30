@@ -12,7 +12,7 @@ public class JobExtensionsTests
     public void GetFingerprintKey_WithTypeAndMethod_ReturnsExpectedKey()
     {
         var method = typeof(SampleJob).GetMethod(nameof(SampleJob.ExecuteAsync))!;
-        var job = new Job(typeof(SampleJob), method, "arg1");
+        var job = new Job(typeof(SampleJob), method, "arg1", CancellationToken.None);
 
         var result = job.GetFingerprintKey();
 
@@ -23,7 +23,7 @@ public class JobExtensionsTests
     public void GetFingerprintKey_WithSingleArg_ReturnsExpectedKey()
     {
         var method = typeof(SampleJob).GetMethod(nameof(SampleJob.ExecuteAsync))!;
-        var job = new Job(typeof(SampleJob), method, "myArg");
+        var job = new Job(typeof(SampleJob), method, "myArg", CancellationToken.None);
 
         var result = job.GetFingerprintKey();
 
@@ -84,6 +84,7 @@ public class JobExtensionsTests
     internal class SampleJob : IRecurringJob
     {
         public string Type => nameof(SampleJob);
-        public Task<JobResult> ExecuteAsync(string identifiant) => throw new NotImplementedException();
+        public Task<JobResult> ExecuteAsync(string identifiant,
+                                            CancellationToken cancellationToken) => throw new NotImplementedException();
     }
 }
