@@ -7,9 +7,9 @@
 	<ItemGroup> 
 		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.9.13.10536" />
 		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.10.9.11143" />
-		<PackageReference Include="Krosoft.Extensions.Validations" Version="2026.9.13.10578" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.10.7.11071" />
-		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.10.7.11071" />
+		<PackageReference Include="Krosoft.Extensions.Validations" Version="2026.10.10.11222" />
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.10.10.11211" />
+		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.10.10.11211" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" /> 
 	</ItemGroup>
 	<ItemGroup>
