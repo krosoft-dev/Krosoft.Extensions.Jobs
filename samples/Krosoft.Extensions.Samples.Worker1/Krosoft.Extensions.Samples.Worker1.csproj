@@ -6,7 +6,7 @@
 	</PropertyGroup>
 	<ItemGroup> 
 		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.10.14.11401" />
-		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.10.14.11429" />
+		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.10.15.11589" />
 		<PackageReference Include="Krosoft.Extensions.Validations" Version="2026.10.15.11512" />
 		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.10.15.11554" />
 		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.10.15.11554" />
