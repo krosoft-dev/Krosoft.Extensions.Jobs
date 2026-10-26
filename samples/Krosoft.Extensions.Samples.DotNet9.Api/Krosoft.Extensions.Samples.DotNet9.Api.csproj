@@ -8,12 +8,12 @@
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2026.10.25.11918" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2026.10.25.11918" />
-		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2026.10.25.11918" />
-		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.10.14.11401" />
-		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.10.26.11987" />
-		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2026.10.26.11987" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs" Version="2026.10.26.12006" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors" Version="2026.10.26.12006" />
+		<PackageReference Include="Krosoft.Extensions.Cqrs.Behaviors.Validations" Version="2026.10.26.12006" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.10.26.12021" />
+		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.10.26.12029" />
+		<PackageReference Include="Krosoft.Extensions.WebApi.Swagger.HealthChecks" Version="2026.10.26.12029" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
 	</ItemGroup>
 	<ItemGroup>
