@@ -13,7 +13,7 @@
 		<PackageReference Include="Hangfire.DynamicJobs" Version="0.3.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.5.12568" />
-		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.11.5.12622" />
+		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.11.12872" />
+		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.11.11.12968" />
 	</ItemGroup>
 </Project>
