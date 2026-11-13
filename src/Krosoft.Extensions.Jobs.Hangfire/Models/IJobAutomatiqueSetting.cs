@@ -1,4 +1,4 @@
-﻿using Hangfire;
+﻿using Krosoft.Extensions.Jobs.Models;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Models;
 
@@ -10,7 +10,7 @@ public interface IJobAutomatiqueSetting
     public string? QueueName { get; set; }
 
     /// <summary>
-    /// Mode de rattrapage des exécutions manquées. <c>null</c> applique <see cref="MisfireHandlingMode.Relaxed" />.
+    /// Politique de rattrapage des exécutions manquées. <c>null</c> applique <see cref="MissedExecutionPolicy.CatchUpOnce" />.
     /// </summary>
-    public MisfireHandlingMode? MisfireHandling => null;
+    public MissedExecutionPolicy? MissedExecution => null;
 }

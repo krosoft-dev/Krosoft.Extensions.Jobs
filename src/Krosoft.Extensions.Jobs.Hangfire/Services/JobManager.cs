@@ -4,6 +4,7 @@ using Hangfire.States;
 using Hangfire.Storage;
 using Krosoft.Extensions.Core.Extensions;
 using Krosoft.Extensions.Core.Models.Exceptions;
+using Krosoft.Extensions.Jobs.Hangfire.Extensions;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Microsoft.Extensions.Logging;
@@ -80,7 +81,7 @@ public class JobManager : IJobManager
                 // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire
                 // le remplace à l'exécution par un token lié à l'arrêt du serveur et à
                 // l'abandon du job.
-                var misfireHandling = jobSetting.MisfireHandling ?? MisfireHandlingMode.Relaxed;
+                var misfireHandling = jobSetting.MissedExecution.ToMisfireHandlingMode();
                 _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
                                                         jobSetting.QueueName,
                                                         () => recurringJob.ExecuteAsync(jobSetting.Identifiant!, CancellationToken.None),
@@ -93,7 +94,7 @@ public class JobManager : IJobManager
 
                 await _jobSettingStore.SaveAsync(jobSetting, cancellationToken);
 
-                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}' et misfire '{misfireHandling}'.");
+                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}' et rattrapage '{jobSetting.MissedExecution}' (misfire '{misfireHandling}').");
             }
             else
             {

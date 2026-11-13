@@ -82,4 +82,47 @@ public class CronHelperTests : BaseTest
 
         Check.ThatCode(() => CronExpression.Parse(result!, CronFormat.IncludeSeconds)).DoesNotThrow();
     }
+
+    [TestMethod]
+    [DataRow("*/1 * * * *", 60)]
+    [DataRow("*/15 * * * *", 15 * 60)]
+    [DataRow("0 * * * *", 3600)]
+    [DataRow("0 */2 * * *", 2 * 3600)]
+    [DataRow("0 3 * * *", 24 * 3600)]
+    [DataRow("0 8,18 * * *", 14 * 3600)]
+    [DataRow("0 9 * * 1", 7 * 24 * 3600)]
+    [Description("Le plus grand écart entre deux occurrences consécutives est renvoyé.")]
+    public void GetMaxInterval_Ok(string cron, int expectedSeconds)
+    {
+        var fromUtc = new DateTime(2026, 11, 13, 10, 0, 0, DateTimeKind.Utc);
+
+        Check.That(CronHelper.GetMaxInterval(cron, fromUtc, TimeZoneInfo.Utc)).IsEqualTo(TimeSpan.FromSeconds(expectedSeconds));
+        Check.That(CronHelper.GetMaxInterval(CronHelper.SpreadWithinMinute(cron, "flux-client-42"), fromUtc, TimeZoneInfo.Utc))
+             .IsEqualTo(TimeSpan.FromSeconds(expectedSeconds));
+    }
+
+    [TestMethod]
+    [DataRow(null)]
+    [DataRow("")]
+    [DataRow("   ")]
+    [DataRow("invalide")]
+    [DataRow("99 * * * *")]
+    [DataRow("@daily")]
+    [Description("Un cron null, vide ou invalide renvoie null.")]
+    public void GetMaxInterval_Invalide(string? cron)
+    {
+        Check.That(CronHelper.GetMaxInterval(cron, TimeZoneInfo.Utc)).IsNull();
+    }
+
+    [TestMethod]
+    [DataRow(2026, 3, 29)]
+    [DataRow(2026, 10, 25)]
+    [Description("Un cron horaire reste à 1 h les jours de changement d'heure en Europe/Paris.")]
+    public void GetMaxInterval_ChangementHeure(int year, int month, int day)
+    {
+        var paris = TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris");
+        var fromUtc = new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc).AddHours(-2);
+
+        Check.That(CronHelper.GetMaxInterval("0 * * * *", fromUtc, paris)).IsEqualTo(TimeSpan.FromHours(1));
+    }
 }

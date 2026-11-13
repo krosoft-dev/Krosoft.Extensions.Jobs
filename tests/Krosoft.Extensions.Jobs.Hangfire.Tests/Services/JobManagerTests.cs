@@ -4,6 +4,7 @@ using Hangfire.Storage;
 using Krosoft.Extensions.Jobs.Hangfire.Interfaces;
 using Krosoft.Extensions.Jobs.Hangfire.Models;
 using Krosoft.Extensions.Jobs.Hangfire.Services;
+using Krosoft.Extensions.Jobs.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Krosoft.Extensions.Jobs.Hangfire.Tests.Services;
@@ -67,7 +68,11 @@ public class JobManagerTests
     }
 
     [TestMethod]
-    public async Task AddOrUpdateRecurringJobsAsync_MisfireHandlingFourni_TransmetLeModeAHangfire()
+    [DataRow(MissedExecutionPolicy.CatchUpOnce, MisfireHandlingMode.Relaxed)]
+    [DataRow(MissedExecutionPolicy.CatchUpAll, MisfireHandlingMode.Strict)]
+    [DataRow(MissedExecutionPolicy.Skip, MisfireHandlingMode.Ignorable)]
+    public async Task AddOrUpdateRecurringJobsAsync_MissedExecutionFourni_TransmetLeModeAHangfire(MissedExecutionPolicy policy,
+                                                                                                   MisfireHandlingMode expected)
     {
         var setting = new JobAutomatiqueSetting
         {
@@ -75,17 +80,17 @@ public class JobManagerTests
             CronExpression = "* * * * *",
             Type = "FlowTrigger",
             QueueName = "default",
-            MisfireHandling = MisfireHandlingMode.Ignorable
+            MissedExecution = policy
         };
         var jobManager = CreateJobManager(["FlowTrigger"], [setting], []);
 
         await jobManager.AddOrUpdateRecurringJobsAsync(CancellationToken.None);
 
-        Check.That(GetRecurringJobOptions("actif").MisfireHandling).IsEqualTo(MisfireHandlingMode.Ignorable);
+        Check.That(GetRecurringJobOptions("actif").MisfireHandling).IsEqualTo(expected);
     }
 
     [TestMethod]
-    public async Task AddOrUpdateRecurringJobsAsync_MisfireHandlingNull_TransmetRelaxed()
+    public async Task AddOrUpdateRecurringJobsAsync_MissedExecutionNull_TransmetRelaxed()
     {
         var jobManager = CreateJobManager(["FlowTrigger"], [CreateSetting("actif", "FlowTrigger")], []);
 

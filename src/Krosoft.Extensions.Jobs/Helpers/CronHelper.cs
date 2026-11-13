@@ -1,6 +1,7 @@
 using System.Buffers.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using Cronos;
 using Krosoft.Extensions.Core.Models.Exceptions;
 using Krosoft.Extensions.Core.Tools;
 
@@ -48,5 +49,91 @@ public static class CronHelper
         }
 
         return $"{GetSecondOffset(key)} {string.Join(' ', fields)}";
+    }
+
+    /// <summary>
+    /// Calcule le plus grand écart entre deux occurrences consécutives d'une expression CRON, à partir de maintenant.
+    /// </summary>
+    /// <param name="cronExpression">Expression CRON à 5 ou 6 champs.</param>
+    /// <param name="timeZone">Fuseau horaire d'évaluation de l'expression.</param>
+    /// <returns>Le plus grand écart, ou null si l'expression est vide, invalide ou a moins de deux occurrences.</returns>
+    public static TimeSpan? GetMaxInterval(string? cronExpression, TimeZoneInfo timeZone)
+        => GetMaxInterval(cronExpression, DateTime.UtcNow, timeZone);
+
+    /// <summary>
+    /// Calcule le plus grand écart entre deux occurrences consécutives d'une expression CRON, sur environ un jour à partir de <paramref name="fromUtc" />.
+    /// </summary>
+    /// <param name="cronExpression">Expression CRON à 5 ou 6 champs.</param>
+    /// <param name="fromUtc">Date UTC de début d'énumération des occurrences.</param>
+    /// <param name="timeZone">Fuseau horaire d'évaluation de l'expression.</param>
+    /// <returns>Le plus grand écart, ou null si l'expression est vide, invalide ou a moins de deux occurrences.</returns>
+    public static TimeSpan? GetMaxInterval(string? cronExpression, DateTime fromUtc, TimeZoneInfo timeZone)
+    {
+        var expression = TryParse(cronExpression);
+        if (expression == null)
+        {
+            return null;
+        }
+
+        var from = fromUtc.Kind == DateTimeKind.Local
+            ? fromUtc.ToUniversalTime()
+            : DateTime.SpecifyKind(fromUtc, DateTimeKind.Utc);
+        var limit = from.AddDays(1);
+
+        var previous = expression.GetNextOccurrence(from, timeZone);
+        TimeSpan? maxInterval = null;
+        while (previous.HasValue)
+        {
+            var next = expression.GetNextOccurrence(previous.Value, timeZone);
+            if (!next.HasValue)
+            {
+                break;
+            }
+
+            var interval = next.Value - previous.Value;
+            if (maxInterval == null || interval > maxInterval)
+            {
+                maxInterval = interval;
+            }
+
+            if (previous.Value > limit)
+            {
+                break;
+            }
+
+            previous = next;
+        }
+
+        return maxInterval;
+    }
+
+    private static CronExpression? TryParse(string? cronExpression)
+    {
+        if (string.IsNullOrWhiteSpace(cronExpression))
+        {
+            return null;
+        }
+
+        var fields = cronExpression.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var format = fields.Length switch
+        {
+            5 => CronFormat.Standard,
+            6 => CronFormat.IncludeSeconds,
+            _ => (CronFormat?)null
+        };
+
+        if (format == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return CronExpression.Parse(string.Join(' ', fields), format.Value);
+        }
+        catch (CronFormatException)
+        {
+            return null;
+        }
     }
 }

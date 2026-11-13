@@ -37,7 +37,7 @@ public class RedisJobSettingStore : IJobSettingStore
             CronExpression = setting.CronExpression,
             Type = setting.Type,
             QueueName = setting.QueueName,
-            MisfireHandling = setting.MisfireHandling,
+            MissedExecution = setting.MissedExecution,
             CreatedAt = existing?.CreatedAt ?? now,
             UpdatedAt = now
         };
