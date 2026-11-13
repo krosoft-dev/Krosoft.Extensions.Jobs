@@ -66,6 +66,41 @@ public class JobManagerTests
         _jobSettingStore.Verify(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    [TestMethod]
+    public async Task AddOrUpdateRecurringJobsAsync_MisfireHandlingFourni_TransmetLeModeAHangfire()
+    {
+        var setting = new JobAutomatiqueSetting
+        {
+            Identifiant = "actif",
+            CronExpression = "* * * * *",
+            Type = "FlowTrigger",
+            QueueName = "default",
+            MisfireHandling = MisfireHandlingMode.Ignorable
+        };
+        var jobManager = CreateJobManager(["FlowTrigger"], [setting], []);
+
+        await jobManager.AddOrUpdateRecurringJobsAsync(CancellationToken.None);
+
+        Check.That(GetRecurringJobOptions("actif").MisfireHandling).IsEqualTo(MisfireHandlingMode.Ignorable);
+    }
+
+    [TestMethod]
+    public async Task AddOrUpdateRecurringJobsAsync_MisfireHandlingNull_TransmetRelaxed()
+    {
+        var jobManager = CreateJobManager(["FlowTrigger"], [CreateSetting("actif", "FlowTrigger")], []);
+
+        await jobManager.AddOrUpdateRecurringJobsAsync(CancellationToken.None);
+
+        Check.That(GetRecurringJobOptions("actif").MisfireHandling).IsEqualTo(MisfireHandlingMode.Relaxed);
+    }
+
+    private RecurringJobOptions GetRecurringJobOptions(string identifiant)
+        => _recurringJobManager.Invocations
+                               .Where(x => x.Arguments.Count > 0 && Equals(x.Arguments[0], identifiant))
+                               .SelectMany(x => x.Arguments)
+                               .OfType<RecurringJobOptions>()
+                               .Single();
+
     private JobManager CreateJobManager(IEnumerable<string> typesGeres,
                                         IEnumerable<IJobAutomatiqueSetting> jobsSetting,
                                         IEnumerable<StoredJobSetting> storedSettings)

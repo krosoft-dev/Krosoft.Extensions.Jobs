@@ -27,6 +27,7 @@ public class InMemoryJobSettingStore : IJobSettingStore
                                   CronExpression = setting.CronExpression,
                                   Type = setting.Type,
                                   QueueName = setting.QueueName,
+                                  MisfireHandling = setting.MisfireHandling,
                                   CreatedAt = now,
                                   UpdatedAt = now
                               },
@@ -36,6 +37,7 @@ public class InMemoryJobSettingStore : IJobSettingStore
                                   CronExpression = setting.CronExpression,
                                   Type = setting.Type,
                                   QueueName = setting.QueueName,
+                                  MisfireHandling = setting.MisfireHandling,
                                   UpdatedAt = now
                               });
 

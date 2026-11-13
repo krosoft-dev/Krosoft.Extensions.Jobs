@@ -80,18 +80,20 @@ public class JobManager : IJobManager
                 // CancellationToken.None n'est qu'un marqueur dans l'expression : Hangfire
                 // le remplace à l'exécution par un token lié à l'arrêt du serveur et à
                 // l'abandon du job.
+                var misfireHandling = jobSetting.MisfireHandling ?? MisfireHandlingMode.Relaxed;
                 _recurringJobManager.AddOrUpdateDynamic(jobSetting.Identifiant,
                                                         jobSetting.QueueName,
                                                         () => recurringJob.ExecuteAsync(jobSetting.Identifiant!, CancellationToken.None),
                                                         jobSetting.CronExpression,
                                                         new DynamicRecurringJobOptions
                                                         {
-                                                            TimeZone = TimeZoneInfo.Local
+                                                            TimeZone = TimeZoneInfo.Local,
+                                                            MisfireHandling = misfireHandling
                                                         });
 
                 await _jobSettingStore.SaveAsync(jobSetting, cancellationToken);
 
-                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}'.");
+                _logger.LogInformation($"Ajout du recurring job '{jobSetting.Identifiant}' de type '{recurringJob.Type}' sur la queue '{jobSetting.QueueName}' avec cron '{jobSetting.CronExpression}' et misfire '{misfireHandling}'.");
             }
             else
             {
