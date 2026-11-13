@@ -120,9 +120,23 @@ public class CronHelperTests : BaseTest
     [Description("Un cron horaire reste à 1 h les jours de changement d'heure en Europe/Paris.")]
     public void GetMaxInterval_ChangementHeure(int year, int month, int day)
     {
-        var paris = TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris");
+        var paris = CreateParisTimeZone();
         var fromUtc = new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc).AddHours(-2);
 
         Check.That(CronHelper.GetMaxInterval("0 * * * *", fromUtc, paris)).IsEqualTo(TimeSpan.FromHours(1));
+    }
+
+    /// <summary>
+    /// Fuseau Europe/Paris construit à la main, pour ne pas dépendre du tzdata de l'agent de build.
+    /// </summary>
+    private static TimeZoneInfo CreateParisTimeZone()
+    {
+        var rule = TimeZoneInfo.AdjustmentRule.CreateAdjustmentRule(DateTime.MinValue.Date,
+                                                                    DateTime.MaxValue.Date,
+                                                                    TimeSpan.FromHours(1),
+                                                                    TimeZoneInfo.TransitionTime.CreateFloatingDateRule(new DateTime(1, 1, 1, 2, 0, 0), 3, 5, DayOfWeek.Sunday),
+                                                                    TimeZoneInfo.TransitionTime.CreateFloatingDateRule(new DateTime(1, 1, 1, 3, 0, 0), 10, 5, DayOfWeek.Sunday));
+
+        return TimeZoneInfo.CreateCustomTimeZone("Europe/Paris", TimeSpan.FromHours(1), "Europe/Paris", "CET", "CEST", [rule]);
     }
 }
