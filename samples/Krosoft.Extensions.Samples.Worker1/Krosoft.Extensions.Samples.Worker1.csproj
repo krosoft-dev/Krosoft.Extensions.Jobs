@@ -5,8 +5,8 @@
 		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 	<ItemGroup> 
-		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.11.11.12902" />
-		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.15.13300" />
+		<PackageReference Include="Krosoft.Extensions.Options" Version="2026.11.16.13448" />
+		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.16.13416" />
 		<PackageReference Include="Krosoft.Extensions.Validations" Version="2026.11.11.13010" />
 		<PackageReference Include="Krosoft.Extensions.WebApi" Version="2026.11.12.13200" />
 		<PackageReference Include="Krosoft.Extensions.WebApi.HealthChecks" Version="2026.11.12.13200" />
