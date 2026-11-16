@@ -4,17 +4,21 @@
 		<Description>Package pour faciliter l'utilisation de jobs Hangfire.</Description>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-		<PackageReference Include="AutoMapper" Version="14.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.15" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
 		<PackageReference Include="Hangfire.Core" Version="1.8.20" />
 		<PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
 		<PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="8.0.0" />
 		<PackageReference Include="Hangfire.DynamicJobs" Version="0.3.0" />
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.16.13768" />
-		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.11.16.13558" />
+		<PackageReference Include="Krosoft.Extensions.Mapping" Version="2026.11.16.13871" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Krosoft.Extensions.Jobs\Krosoft.Extensions.Jobs.csproj" />

@@ -3,7 +3,7 @@
         <PackageTags>Krosoft Extension Jobs Hangfire Storage InMemory</PackageTags>
         <Description>Package pour faciliter le stockage de jobs Hangfire en mémoire.</Description>
     </PropertyGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <ItemGroup>
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
     </ItemGroup>
     <ItemGroup>
