@@ -3,6 +3,6 @@
     <ProjectReference Include="..\..\src\Krosoft.Extensions.Jobs\Krosoft.Extensions.Jobs.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Krosoft.Extensions.Testing" Version="2026.11.19.14153" />
+    <PackageReference Include="Krosoft.Extensions.Testing" Version="2026.11.21.14221" />
   </ItemGroup>
 </Project>
