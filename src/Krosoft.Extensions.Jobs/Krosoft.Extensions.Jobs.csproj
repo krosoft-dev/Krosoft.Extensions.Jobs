@@ -13,7 +13,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Cronos" Version="0.13.0" />
-		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="FluentValidation" Version="12.2.0" />
 		<PackageReference Include="Krosoft.Extensions.Core" Version="2026.11.16.13768" />
 	</ItemGroup>
 </Project>
